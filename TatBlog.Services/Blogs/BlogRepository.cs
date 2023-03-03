@@ -110,5 +110,19 @@ namespace TatBlog.Services.Blogs
             return await tagQuery
                 .ToPagedListAsync(pagingParams, cancellationToken);
         }
+        public async Task<Tag> GetTagSlugAsync(string slug, CancellationToken cancellationToken = default)
+        {
+            IQueryable<Tag> tagsQuery = _context.Set<Tag>();
+
+
+            if (!string.IsNullOrEmpty(slug))
+            {
+                tagsQuery = tagsQuery.Where(x => x.UrlSlug == slug);
+            }
+
+            return await tagsQuery.FirstOrDefaultAsync(cancellationToken);
+        }
+
+
     }
 }

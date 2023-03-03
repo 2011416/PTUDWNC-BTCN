@@ -75,7 +75,7 @@ namespace TatBlog.Data.Migrations
                     ViewCount = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Published = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     PostedDate = table.Column<DateTime>(type: "datetime", nullable: false),
-                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     AuthorId = table.Column<int>(type: "int", nullable: false)
                 },
