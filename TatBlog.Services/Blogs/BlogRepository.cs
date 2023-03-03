@@ -123,6 +123,41 @@ namespace TatBlog.Services.Blogs
             return await tagsQuery.FirstOrDefaultAsync(cancellationToken);
         }
 
+        public async Task<bool> DeleteTagByNameAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Tag>()
+                .Where(x => x.Id == id)
+                .ExecuteDeleteAsync(cancellationToken) > 0;
+        }
 
+        public async Task<IList<TagItem>> GetTagsAsync(CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Tag>()
+                .Select(x => new TagItem()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    UrlSlug = x.UrlSlug,
+                    PostCount = x.Posts.Count(p => p.Published)
+                })
+                .ToListAsync();
+        }
+
+        public async Task<Category> GetCategoryBySlugAsync(string slug, CancellationToken cancellationToken = default)
+        {
+            IQueryable<Category> categories = _context.Set<Category>();
+
+            return await categories
+                .FirstOrDefaultAsync(x => x.UrlSlug.ToLower().Contains(slug.ToLower()), cancellationToken);
+        }
+
+        public async Task<Category> GetCategoryByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            IQueryable<Category> categories = _context.Set<Category>();
+
+            return await categories
+                .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        }
     }
 }

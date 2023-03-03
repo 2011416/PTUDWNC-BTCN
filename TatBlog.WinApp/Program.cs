@@ -112,7 +112,6 @@ var taglist = await blogRepo.GetTagSlugAsync("google-applications");
 Console.WriteLine("{0, -5}{1, -50}", "slug", "name");
 Console.WriteLine("{0, -20}{1, -50}", taglist.UrlSlug, taglist);
 
-
 //var tagList = await blogRepo.GetTagSlugAsync("google-applications");
 
 //Console.WriteLine("{0, -5}{1, -50}", "ID", "Name");
@@ -121,4 +120,34 @@ Console.WriteLine("{0, -20}{1, -50}", taglist.UrlSlug, taglist);
 //    Console.WriteLine("{0, -5}{1, -50}", tagList.Id, tagList.Name);
 //}
 
+Console.WriteLine("".PadRight(80, '-'));
+
+//1c
+var tags = await blogRepo.GetTagsAsync();
+Console.WriteLine("{0, -5}{1, -30}{2, -30}{3, -25}{4, 10}", "ID", "Name", "Description", "Slug", "Posts");
+foreach (var tag in tags)
+{
+    Console.WriteLine("{0, -5}{1, -30}{2, -30}{3, -25}{4, 10}", tag.Id, tag.Name, tag.Description, tag.UrlSlug, tag.PostCount);
+}
+
+
+Console.WriteLine("".PadRight(80, '-'));
+
+//1d
+//bool isSuccess = await blogRepo.DeleteTagByNameAsync(3);
+//Console.WriteLine(isSuccess);
+
+Console.WriteLine("".PadRight(80, '-'));
+
+//1e
+//var category = await blogRepo.GetCategoryBySlugAsync("messaging");
+//Console.WriteLine("{0, -5}{1, -10}{2, 20}{3, 20}", "ID", "Name", "Description", "Slug");
+//Console.WriteLine("{0, -5}{1, -10}{2, 20}{3, 20}", category?.Id, category?.Name, category?.Description, category?.UrlSlug);
+
+//Console.WriteLine("".PadRight(80, '-'));
+
+//1f
+var category = await blogRepo.GetCategoryByIdAsync(5);
+Console.WriteLine("{0, -5}{1, -10}{2, 28}{3, 20}", "ID", "Name", "Description", "Slug");
+Console.WriteLine("{0, -5}{1, -10}{2, 28}{3, 20}", category?.Id, category?.Name, category?.Description, category?.UrlSlug);
 
