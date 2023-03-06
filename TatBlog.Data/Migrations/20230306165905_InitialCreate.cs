@@ -46,6 +46,24 @@ namespace TatBlog.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Subscribers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SubDated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UnsubDated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CancelReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Voluntary = table.Column<bool>(type: "bit", nullable: false),
+                    AdminNotes = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Subscribers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tags",
                 columns: table => new
                 {
@@ -141,6 +159,9 @@ namespace TatBlog.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "PostTags");
+
+            migrationBuilder.DropTable(
+                name: "Subscribers");
 
             migrationBuilder.DropTable(
                 name: "Posts");
