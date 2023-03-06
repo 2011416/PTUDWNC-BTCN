@@ -159,5 +159,59 @@ namespace TatBlog.Services.Blogs
             return await categories
                 .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
+
+        public async Task<bool> IsCategorySlugExistedAsync(string slug, CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Category>()
+                .AnyAsync(x => x.UrlSlug.CompareTo(slug) == 0, cancellationToken);
+        }
+
+        public async Task<IPagedList<CategoryItem>> GetPagedCategoriesAsync(IPagingParams pagingParams, CancellationToken cancellationToken = default)
+        {
+            var categoryQuery = _context.Set<Category>()
+                .Select(x => new CategoryItem()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    UrlSlug = x.UrlSlug,
+                    Description = x.Description,
+                    PostCount = x.Posts.Count(p => p.Published)
+                });
+
+            return await categoryQuery.ToPagedListAsync(pagingParams, cancellationToken);
+        }
+
+        public async Task<IPagedList<Post>> GetPostByQueryAsync(IPagingParams pagingParams, PostQuery query, CancellationToken cancellationToken = default)
+        {
+            IQueryable<Post> postsQuery = _context.Set<Post>();
+
+            if (!string.IsNullOrEmpty(query.AuthorId))
+            {
+                postsQuery = postsQuery.Where(p => p.AuthorId.ToString().Equals(query.AuthorId));
+            }
+            if (!string.IsNullOrEmpty(query.CategoryId))
+            {
+                postsQuery = postsQuery.Where(p => p.CategoryId.ToString().Equals(query.CategoryId));
+            }
+            if (!string.IsNullOrEmpty(query.Slug))
+            {
+                postsQuery = postsQuery.Where(p => p.UrlSlug.ToString().Contains(query.Slug));
+            }
+            if (!string.IsNullOrEmpty(query.PostedDate))
+            {
+                postsQuery = postsQuery.Where(p => p.PostedDate.Date.Equals(DateTime.Parse(query.PostedDate).Date));
+            }
+
+            query.GetTagListAsync();
+            if (query.SelectedTag != null && query.SelectedTag.Count() > 0)
+            {
+                var sameTag = query.SelectedTag.Intersect(query.SelectedTag);
+                postsQuery = postsQuery.Where(p => query.SelectedTag.Any(t => sameTag.Contains(t)));
+            }
+
+            return await postsQuery.ToPagedListAsync(pagingParams, cancellationToken);
+        }
+
+
     }
 }

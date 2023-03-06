@@ -38,5 +38,11 @@ namespace TatBlog.Services.Blogs
         Task<Category> GetCategoryBySlugAsync(string slug, CancellationToken cancellationToken = default);
 
         Task<Category> GetCategoryByIdAsync(int id, CancellationToken cancellationToken = default);
+
+        Task<bool> IsCategorySlugExistedAsync(string slug, CancellationToken cancellationToken = default);
+
+        Task<IPagedList<CategoryItem>> GetPagedCategoriesAsync(IPagingParams pagingParams, CancellationToken cancellationToken = default);
+
+        Task<IPagedList<Post>> GetPostByQueryAsync(IPagingParams pagingParams, PostQuery query, CancellationToken cancellationToken = default);
     }
 }

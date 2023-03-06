@@ -1,4 +1,7 @@
-﻿using TatBlog.Core.Contracts;
+﻿using Microsoft.EntityFrameworkCore;
+using TatBlog.Core.Contracts;
+using TatBlog.Core.DTO;
+using TatBlog.Core.Entities;
 using TatBlog.Data.Contexts;
 using TatBlog.Data.Seeders;
 using TatBlog.Services.Blogs;
@@ -16,13 +19,13 @@ IBlogRepository blogRepo = new BlogRepository(context);
 //var posts = await blogRepo.GetPopularArticlesAsync(3);
 
 // Tạo đối tượng chứa tham số phân trang
-var pagingParams = new PagingParams
-{
-    PageNumber = 1,        //Lấy kết quả ở trang số 1
-    PageSize = 5,          //Lấy 5 mẫu ti
-    SortColumn = "Name",   // Sắp xếp theo tên
-    SortOrder = "DESC"     //Theo chiều giảm dần
-};
+//var pagingParams = new PagingParams
+//{
+//    PageNumber = 1,        //Lấy kết quả ở trang số 1
+//    PageSize = 5,          //Lấy 5 mẫu ti
+//    SortColumn = "Name",   // Sắp xếp theo tên
+//    SortOrder = "DESC"     //Theo chiều giảm dần
+//};
 
 
 //// Lấy danh sách từ khóa
@@ -109,8 +112,8 @@ var pagingParams = new PagingParams
 
 var taglist = await blogRepo.GetTagSlugAsync("google-applications");
 
-Console.WriteLine("{0, -5}{1, -50}", "slug", "name");
-Console.WriteLine("{0, -20}{1, -50}", taglist.UrlSlug, taglist);
+Console.WriteLine("{0, -5}{1, -10}{2, 20}{3, 20}", "ID", "Name", "Description", "Slug");
+Console.WriteLine("{0, -5}{1, -10}{2, 20}{3, 30}", taglist?.Id, taglist?.Name, taglist?.Description, taglist?.UrlSlug);
 
 //var tagList = await blogRepo.GetTagSlugAsync("google-applications");
 
@@ -124,10 +127,10 @@ Console.WriteLine("".PadRight(80, '-'));
 
 //1c
 var tags = await blogRepo.GetTagsAsync();
-Console.WriteLine("{0, -5}{1, -30}{2, -30}{3, -25}{4, 10}", "ID", "Name", "Description", "Slug", "Posts");
+Console.WriteLine("{0, -5}{1, -30}{2, -35}{3, -25}{4, 10}", "ID", "Name", "Description", "Slug", "Posts");
 foreach (var tag in tags)
 {
-    Console.WriteLine("{0, -5}{1, -30}{2, -30}{3, -25}{4, 10}", tag.Id, tag.Name, tag.Description, tag.UrlSlug, tag.PostCount);
+    Console.WriteLine("{0, -5}{1, -30}{2, -35}{3, -25}{4, 10}", tag.Id, tag.Name, tag.Description, tag.UrlSlug, tag.PostCount);
 }
 
 
@@ -148,6 +151,34 @@ Console.WriteLine("".PadRight(80, '-'));
 
 //1f
 var category = await blogRepo.GetCategoryByIdAsync(5);
-Console.WriteLine("{0, -5}{1, -10}{2, 28}{3, 20}", "ID", "Name", "Description", "Slug");
-Console.WriteLine("{0, -5}{1, -10}{2, 28}{3, 20}", category?.Id, category?.Name, category?.Description, category?.UrlSlug);
+Console.WriteLine("{0, -5}{1, -10}{2, 30}{3, 20}", "ID", "Name", "Description", "Slug");
+Console.WriteLine("{0, -5}{1, -10}{2, 25}{3, 20}", category?.Id, category?.Name, category?.Description, category?.UrlSlug);
+
+Console.WriteLine("".PadRight(80, '-'));
+
+// 1i
+var isExisted = await blogRepo.IsCategorySlugExistedAsync("architecture");
+Console.WriteLine(isExisted);
+
+Console.WriteLine("".PadRight(80, '-'));
+
+// 1j
+var pagingParams = new PagingParams
+{
+    PageNumber = 1,
+    PageSize = 5,
+    SortColumn = "Id"
+};
+
+var categories = await blogRepo.GetPagedCategoriesAsync(pagingParams);
+Console.WriteLine("{0, -5}{1, -30}{2, 40}{3, 20}{4, 25}", "ID", "Name", "Description", "Slug", "Posts");
+foreach (var categoryItem in categories)
+{
+    Console.WriteLine("{0, -5}{1, -30}{2, 40}{3, 30}{4, 15}", categoryItem?.Id, categoryItem?.Name, categoryItem?.Description, categoryItem?.UrlSlug, categoryItem?.PostCount);
+}
+
+Console.WriteLine("".PadRight(80, '-'));
+
+//1s
+
 
