@@ -181,37 +181,6 @@ namespace TatBlog.Services.Blogs
             return await categoryQuery.ToPagedListAsync(pagingParams, cancellationToken);
         }
 
-        public async Task<IPagedList<Post>> GetPostByQueryAsync(IPagingParams pagingParams, PostQuery query, CancellationToken cancellationToken = default)
-        {
-            IQueryable<Post> postsQuery = _context.Set<Post>();
-
-            if (!string.IsNullOrEmpty(query.AuthorId))
-            {
-                postsQuery = postsQuery.Where(p => p.AuthorId.ToString().Equals(query.AuthorId));
-            }
-            if (!string.IsNullOrEmpty(query.CategoryId))
-            {
-                postsQuery = postsQuery.Where(p => p.CategoryId.ToString().Equals(query.CategoryId));
-            }
-            if (!string.IsNullOrEmpty(query.Slug))
-            {
-                postsQuery = postsQuery.Where(p => p.UrlSlug.ToString().Contains(query.Slug));
-            }
-            if (!string.IsNullOrEmpty(query.PostedDate))
-            {
-                postsQuery = postsQuery.Where(p => p.PostedDate.Date.Equals(DateTime.Parse(query.PostedDate).Date));
-            }
-
-            query.GetTagListAsync();
-            if (query.SelectedTag != null && query.SelectedTag.Count() > 0)
-            {
-                var sameTag = query.SelectedTag.Intersect(query.SelectedTag);
-                postsQuery = postsQuery.Where(p => query.SelectedTag.Any(t => sameTag.Contains(t)));
-            }
-
-            return await postsQuery.ToPagedListAsync(pagingParams, cancellationToken);
-        }
-
 
     }
 }
