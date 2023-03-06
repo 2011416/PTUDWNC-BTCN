@@ -13,7 +13,7 @@ namespace TatBlog.Core.Entities
         public DateTime SubDated { get; set; }
         public DateTime UnsubDated { get; set; }
         public string CancelReason { get; set; }
-        public bool Flag { get; set; }
+        public bool Voluntary { get; set; }
         public string AdminNotes { get; set; }
     }
 }

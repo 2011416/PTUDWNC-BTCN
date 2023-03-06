@@ -34,7 +34,7 @@ namespace TatBlog.Data.Mappings
                    .IsRequired()
                    .HasMaxLength(1000);
 
-            builder.Property(s => s.Flag)
+            builder.Property(s => s.Voluntary)
                    .IsRequired()
                    .HasDefaultValue(false);
 

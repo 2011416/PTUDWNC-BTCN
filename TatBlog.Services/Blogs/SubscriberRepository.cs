@@ -8,41 +8,41 @@ using TatBlog.Core.Entities;
 
 namespace TatBlog.Services.Blogs
 {
-    public class SubscriberRepository
+    public class SubscriberRepository : ISubscriberRepository
     {
-        public Task SubcribeAsync(string email)
+        public Task BlockSubscriberAsync(int id, string reason, string notes)
         {
-            return null;
+            throw new NotImplementedException();
         }
 
-        public Task UnSubcribeAsync(string email,string reason, bool voluntary)
+        public Task DeleteSubscriberAsync(int id)
         {
-            return null;
+            throw new NotImplementedException();
         }
 
-        public Task BlockSubcribeAsync(int id, string reason, string notes)
+        public Task<Subscriber> GetSubscriberByEmailAsync(string email)
         {
-            return null;
+            throw new NotImplementedException();
         }
 
-        public Task DeleteSubcribeAsync(int id)
+        public Task<Subscriber> GetSubscriberByIdAsync(int id)
         {
-            return null;
-        }
-
-        public Task GetSubcribeByIdAsync(int id)
-        {
-            return null;
-        }
-
-        public Task GetSubcribeByEmailAsync(string email)
-        {
-            return null;
+            throw new NotImplementedException();
         }
 
         public Task<IPagedList<Subscriber>> SearchSubscribersAsync(IPagingParams pagingParams, string keyword, bool unsubscribed, bool involuntary)
         {
-            return null;
+            throw new NotImplementedException();
+        }
+
+        public Task SubscribeAsync(string email)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UnsubscribeAsync(string email, string reason, bool voluntary)
+        {
+            throw new NotImplementedException();
         }
     }
 }

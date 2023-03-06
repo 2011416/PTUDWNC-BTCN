@@ -179,6 +179,11 @@ foreach (var categoryItem in categories)
 
 Console.WriteLine("".PadRight(80, '-'));
 
+//1l
+var postById = await blogRepo.GetPostByIdAsync(3);
+Console.WriteLine("{0, 20}{1, 50}{2, 30}", "Name", "Description", "Slug");
+Console.WriteLine("{0, 20}{1, 45}{2, 20}", postById.Title, postById.Description, postById.UrlSlug);
+
 //1s
 
 
