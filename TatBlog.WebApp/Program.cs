@@ -41,11 +41,30 @@ var app = builder.Build();
     app.UseRouting();
 
     app.MapControllerRoute(
+        name: "posts-by-category",
+        pattern: "blog/category/{slug}",
+        defaults: new { controller = "Blog", Action = "Category" });
+
+    app.MapControllerRoute(
+     name: "posts-by-tag",
+     pattern: "blog/tag/{slug}",
+     defaults: new { controller = "Blog", Action = "Tag" });
+
+    app.MapControllerRoute(
+     name: "single-post",
+     pattern: "blog/post{year:int}/{month:int}/{day:int}/{slug}",
+     defaults: new { controller = "Blog", Action = "Post" });
+
+    app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Blog}/{action=Index}/{id?}");
 
 }
 
-
+using (var scope = app.Services.CreateScope())
+{
+    var seeder = scope.ServiceProvider.GetRequiredService<IDataSeeder>();
+    seeder.Initialize();
+}
 
     app.Run();

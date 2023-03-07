@@ -14,10 +14,22 @@ namespace TatBlog.WebApp.Controllers
             _blogRepository = blogRepository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(
+            [FromQuery(Name = "p")] int pageNumber = 1,
+            [FromQuery(Name = "ps")] int pageSize =10)
         {
-            ViewBag.CurrentTime = DateTime.Now.ToString("HH:mm:ss");
-            return View();
+            var postQuery = new PostQuery()
+            {
+                PublishedOnly = true,
+
+            };
+
+            var postsList = await _blogRepository
+                .GetPagedPostsAsync(postQuery, pageNumber, pageSize);
+
+            ViewBag.PostQuery = postQuery;
+
+            return View(postsList);
         }
 
 

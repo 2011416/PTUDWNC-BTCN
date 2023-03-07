@@ -3,20 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TatBlog.Core.Entities;
+using TatBlog.Core.Contracts;
 
 namespace TatBlog.Core.DTO
 {
-    public class PostQuery
+    public class PostQuery : IPostQuery
     {
-        public string AuthorId { get; set; }
-        public string CategoryId { get; set; }
-        public string Slug { get; set; }
-        public string PostedDate { get; set; }
-        public string Tags { get; set; }
-        public IList<string> SelectedTag { get; set; }
-        public IEnumerable<string> SelectedAuthor { get; set; }
-        public IEnumerable<string> SelectedCategory { get; set; }
+        public int AuthorId { get; set; } = -1;
+        public int CategoryId { get; set; } = -1;
 
+        public string CategorySlug { get; set; } = "";
+        public string AuthorSlug { get; set; } = "";
+        public string TagSlug { get; set; } = "";
+        public int PostedYear { get; set; } = -1;
+        public int PostedMonth { get; set; } = -1;
+        public bool PublishedOnly { get; set; } = true;
+
+        public bool NotPublished { get; set; } = false;
+        public string Keyword { get; set; } = "";
+        public int Year { get; set; }
+        public int Month { get; set; }
+        public string TitleSlug { get; set; }
     }
 }

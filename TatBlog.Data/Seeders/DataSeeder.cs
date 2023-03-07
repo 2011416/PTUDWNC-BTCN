@@ -163,7 +163,7 @@ namespace TatBlog.Data.Seeders
                 Published = true,
                 PostedDate = new DateTime (2022, 7, 9, 10, 20, 0),
                 ModifiedDate = null,
-                Author= authors[0],
+                Author= authors[1],
                 ViewCount = 6,
                 Category = categories[6],
                 Tags = new List<Tag>()
@@ -179,7 +179,55 @@ namespace TatBlog.Data.Seeders
                 Published = true,
                 PostedDate = new DateTime (2022, 7, 9, 10, 20, 0),
                 ModifiedDate = null,
-                Author= authors[0],
+                Author= authors[2],
+                ViewCount = 19,
+                Category = categories[6],
+                Tags = new List<Tag>()
+                { tags[2] }
+            },
+             new()
+            {
+                Title = "HTML, CSS",
+                ShortDescription = "David and friends has a great repos " ,
+                Description = "Here's a few great DON'T and DO examples ",
+                Meta = "David and friends has a great repository filled ",
+                UrlSlug ="aspnet-core-diagnostic-scenarios",
+                Published = true,
+                PostedDate = new DateTime (2022, 7, 9, 10, 20, 0),
+                ModifiedDate = null,
+                Author= authors[2],
+                ViewCount = 19,
+                Category = categories[6],
+                Tags = new List<Tag>()
+                { tags[2] }
+            },
+              new()
+            {
+                Title = "Javascript",
+                ShortDescription = "David and friends has a great repos " ,
+                Description = "Here's a few great DON'T and DO examples ",
+                Meta = "David and friends has a great repository filled ",
+                UrlSlug ="aspnet-core-diagnostic-scenarios",
+                Published = true,
+                PostedDate = new DateTime (2022, 7, 9, 10, 20, 0),
+                ModifiedDate = null,
+                Author= authors[1],
+                ViewCount = 19,
+                Category = categories[6],
+                Tags = new List<Tag>()
+                { tags[2] }
+            },
+               new()
+            {
+                Title = "Json Zero to Hero",
+                ShortDescription = "David and friends has a great repos " ,
+                Description = "Here's a few great DON'T and DO examples ",
+                Meta = "David and friends has a great repository filled ",
+                UrlSlug ="aspnet-core-diagnostic-scenarios",
+                Published = true,
+                PostedDate = new DateTime (2022, 7, 9, 10, 20, 0),
+                ModifiedDate = null,
+                Author= authors[2],
                 ViewCount = 19,
                 Category = categories[6],
                 Tags = new List<Tag>()
