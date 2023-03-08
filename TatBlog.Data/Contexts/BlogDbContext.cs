@@ -27,6 +27,10 @@ namespace TatBlog.Data.Contexts
         {
         }
 
+        public BlogDbContext()
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(

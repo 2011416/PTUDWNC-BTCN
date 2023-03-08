@@ -199,7 +199,7 @@ namespace TatBlog.Services.Blogs
         }
 
 
-        private IQueryable<Post> FilterPosts(PostQuery condition)
+        public IQueryable<Post> FilterPosts(PostQuery condition)
         {
             IQueryable<Post> posts = _context.Set<Post>()
                 .Include(x => x.Category)

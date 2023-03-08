@@ -57,6 +57,20 @@ namespace TatBlog.Data.Seeders
                     UrlSlug ="Kathy-Smith",
                     Email ="KathySmith@gmotip.com",
                     JoinedDate = new DateTime(2010, 9, 06)
+                },
+                 new()
+                {
+                    FullName ="Jason Thunder",
+                    UrlSlug ="jason-thunder",
+                    Email ="jason436@gmail.com",
+                    JoinedDate = new DateTime(2018, 5, 19)
+                },
+                new()
+                {
+                    FullName ="Wil Smith",
+                    UrlSlug ="wil-Smith",
+                    Email ="WilSmith@gmotip.com",
+                    JoinedDate = new DateTime(2011, 7, 06)
                 }
 };
                 _dbContext.Authors.AddRange(authors);
@@ -76,7 +90,10 @@ namespace TatBlog.Data.Seeders
                new() {Name ="Design Patterns", Description ="Design Patterns", UrlSlug ="design-patterns",ShowOnMenu =true},
                new() {Name ="Domain Driven Design", Description ="Domain Driven Design", UrlSlug ="Domain-Driven-Design",ShowOnMenu =true },
                new() {Name ="Programming languages", Description ="Programming languages", UrlSlug ="Programming-languages",ShowOnMenu =true },
-               new() {Name ="Practices", Description ="Practices", UrlSlug ="Practices",ShowOnMenu =true }
+               new() {Name ="Practices", Description ="Practices", UrlSlug ="Practices",ShowOnMenu =true },
+               new() {Name ="HTML,CSS", Description ="html css", UrlSlug ="html-css", ShowOnMenu =true},
+               new() {Name ="JavaScript", Description ="javascript", UrlSlug ="javascript", ShowOnMenu = true},
+               new() {Name ="Json Zero to Hero", Description ="json zero to hero", UrlSlug ="json-zero-to-hero", ShowOnMenu = true}
             };
             _dbContext.AddRange(categories);
             _dbContext.SaveChanges();
@@ -92,7 +109,9 @@ namespace TatBlog.Data.Seeders
            new() {Name = "ASP.NET MVC", Description = "ASP.NET MVC", UrlSlug = "asp.net-mvc"},
            new() {Name = "Razor Page", Description = "razor page", UrlSlug = "razor-page"},
            new() {Name ="Deep Learning", Description ="deep learning", UrlSlug ="deep-learning"},
-           new() {Name ="Neural Network", Description ="neural network", UrlSlug ="neural-network"}
+           new() {Name ="HTML,CSS", Description ="html css", UrlSlug ="html-css"},
+           new() {Name ="JavaScript", Description ="javascript", UrlSlug ="javascript"},
+           new() {Name ="Json Zero to Hero", Description ="json zero to hero", UrlSlug ="json-zero-to-hero"}
 
         };
             _dbContext.AddRange(tags);
@@ -131,7 +150,7 @@ namespace TatBlog.Data.Seeders
                 Published = true,
                 PostedDate = new DateTime (2022, 8, 25, 10, 20, 0),
                 ModifiedDate = null,
-                Author= authors[0],
+                Author= authors[4],
                 ViewCount = 30,
                 Category = categories[5],
                 Tags = new List<Tag>()
@@ -147,7 +166,7 @@ namespace TatBlog.Data.Seeders
                 Published = true,
                 PostedDate = new DateTime (2022, 9, 25, 10, 20, 0),
                 ModifiedDate = null,
-                Author= authors[0],
+                Author= authors[3],
                 ViewCount = 14,
                 Category = categories[3],
                 Tags = new List<Tag>()
@@ -195,7 +214,7 @@ namespace TatBlog.Data.Seeders
                 Published = true,
                 PostedDate = new DateTime (2022, 7, 9, 10, 20, 0),
                 ModifiedDate = null,
-                Author= authors[2],
+                Author= authors[0],
                 ViewCount = 19,
                 Category = categories[6],
                 Tags = new List<Tag>()

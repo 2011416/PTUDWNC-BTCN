@@ -46,5 +46,6 @@ namespace TatBlog.Services.Blogs
         Task<Post> GetPostByIdAsync(int id, CancellationToken cancellationToken = default);
 
         Task<IPagedList<Post>> GetPagedPostsAsync(PostQuery condition, int pageNumber = 1, int pageSize = 10, CancellationToken cancellationToken = default);
+
     }
 }

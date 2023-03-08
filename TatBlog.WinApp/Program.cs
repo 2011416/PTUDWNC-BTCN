@@ -1,19 +1,19 @@
-﻿//using Microsoft.EntityFrameworkCore;
-//using TatBlog.Core.Contracts;
-//using TatBlog.Core.DTO;
-//using TatBlog.Core.Entities;
-//using TatBlog.Data.Contexts;
-//using TatBlog.Data.Seeders;
-//using TatBlog.Services.Blogs;
-//using TatBlog.WinApp;
+﻿using Microsoft.EntityFrameworkCore;
+using TatBlog.Core.Contracts;
+using TatBlog.Core.DTO;
+using TatBlog.Core.Entities;
+using TatBlog.Data.Contexts;
+using TatBlog.Data.Seeders;
+using TatBlog.Services.Blogs;
+using TatBlog.WinApp;
 
 
 ////Tạo đối tượng DbContext để quản lý phiên làm việc
 //// Với CSDL và trạng thái của các đối tượng
-//var context = new BlogDbContext();
+var context = new BlogDbContext();
 
 ////Tạo đối tượng Blogrepository
-//IBlogRepository blogRepo = new BlogRepository(context);
+IBlogRepository blogRepo = new BlogRepository(context);
 
 //////Xuất 3 bài viết có lượt xem nhiều nhất
 ////var posts = await blogRepo.GetPopularArticlesAsync(3);
