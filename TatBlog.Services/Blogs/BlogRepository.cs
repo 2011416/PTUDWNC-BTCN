@@ -21,29 +21,34 @@ namespace TatBlog.Services.Blogs
         {
             _context = context;
         }
-       
-        public async Task<Post> GetPostAsync(int year, int month, string slug, CancellationToken cancellationToken = default)
+
+        public async Task<Post> GetPostAsync(
+         string slug,
+         CancellationToken cancellationToken = default)
         {
-            IQueryable<Post> postsQuery = _context.Set<Post>()
+            var postQuery = new PostQuery()
+            {
+                PublishedOnly = false,
+                TitleSlug = slug
+            };
+
+            return await FilterPosts(postQuery).FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<Post> GetPostByIdAsync(
+            int postId, bool includeDetails = false,
+            CancellationToken cancellationToken = default)
+        {
+            if (!includeDetails)
+            {
+                return await _context.Set<Post>().FindAsync(postId);
+            }
+
+            return await _context.Set<Post>()
                 .Include(x => x.Category)
-                .Include(x => x.Author);
-
-            if (year > 0)
-            {
-                postsQuery = postsQuery.Where(x => x.PostedDate.Year == year);
-            }
-
-            if(month > 0)
-            {
-                postsQuery = postsQuery.Where(x => x.PostedDate.Month == month);
-            }
-
-            if (!string.IsNullOrEmpty(slug)) 
-            {
-                postsQuery = postsQuery.Where(x => x.UrlSlug == slug);
-            }
-
-            return await postsQuery.FirstOrDefaultAsync(cancellationToken);
+                .Include(x => x.Author)
+                .Include(x => x.Tags)
+                .FirstOrDefaultAsync(x => x.Id == postId, cancellationToken);
         }
 
         public async Task<IList<Post>> GetPopularArticlesAsync(int numPosts, CancellationToken cancellationToken = default)
@@ -187,15 +192,26 @@ namespace TatBlog.Services.Blogs
         }
 
         public async Task<IPagedList<Post>> GetPagedPostsAsync(
-      PostQuery condition,
-      int pageNumber = 1,
-      int pageSize =10,
-      CancellationToken cancellationToken = default)
+        PostQuery condition,
+        int pageNumber = 1,
+        int pageSize =10,
+        CancellationToken cancellationToken = default)
         {
             return await FilterPosts(condition).ToPagedListAsync(
                 pageNumber, pageSize,
                 nameof(Post.PostedDate), "DESC",
                 cancellationToken);
+        }
+
+        public async Task<IPagedList<T>> GetPagedPostsAsync<T>(
+        PostQuery condition,
+        IPagingParams pagingParams,
+        Func<IQueryable<Post>, IQueryable<T>> mapper)
+        {
+            var posts = FilterPosts(condition);
+            var projectedPosts = mapper(posts);
+
+            return await projectedPosts.ToPagedListAsync(pagingParams);
         }
 
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TatBlog.Core.Contracts;
+using TatBlog.Core.DTO;
 
 namespace TatBlog.Core.DTO
 {
@@ -23,6 +24,8 @@ namespace TatBlog.Core.DTO
         public string Keyword { get; set; }
         public int Year { get; set; }
         public int Month { get; set; }
+        public string Tag { get; set; }
         public string TitleSlug { get; set; }
     }
 }
+

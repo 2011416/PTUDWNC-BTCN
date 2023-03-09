@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,10 +12,11 @@ namespace TatBlog.Services.Blogs
 {
     public interface IBlogRepository
     {
-        // Tìm bài viết có tên định danh là 'slug'
-        // và được đăng vào tháng 'month' năm 'year'
 
-        Task<Post> GetPostAsync(int year, int month,string slug, CancellationToken cancellationToken = default);
+        Task<Post> GetPostAsync(string slug, CancellationToken cancellationToken = default);
+
+        Task<Post> GetPostByIdAsync(int postId, bool includeDetails = false, CancellationToken cancellationToken = default);
+
 
         // Tìm Top N Bài viết phổ được nhiều người xem nhất
         Task<IList<Post>> GetPopularArticlesAsync( int numPosts, CancellationToken cancellationToken= default);
@@ -46,6 +48,8 @@ namespace TatBlog.Services.Blogs
         Task<Post> GetPostByIdAsync(int id, CancellationToken cancellationToken = default);
 
         Task<IPagedList<Post>> GetPagedPostsAsync(PostQuery condition, int pageNumber = 1, int pageSize = 10, CancellationToken cancellationToken = default);
+
+        Task<IPagedList<T>> GetPagedPostsAsync<T>(PostQuery condition, IPagingParams pagingParams, Func<IQueryable<Post>, IQueryable<T>> mapper);
 
     }
 }

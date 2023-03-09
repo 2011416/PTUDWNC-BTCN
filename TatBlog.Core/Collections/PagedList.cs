@@ -12,7 +12,11 @@ namespace TatBlog.Core.Collections
     {
         private readonly List<T> _subset = new();
 
-        public PagedList(IList<T> items, int pageNumber, int pageSize, int totalCount) 
+        public PagedList(
+            IList<T> items,
+            int pageNumber,
+            int pageSize,
+            int totalCount) 
         {
             PageNumber = pageNumber;
             PageSize = pageSize;

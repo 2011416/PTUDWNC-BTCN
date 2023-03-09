@@ -17,13 +17,13 @@ namespace TatBlog.WebApp.Controllers
         public async Task<IActionResult> Index(
             [FromQuery(Name = "k")] string? keyword = null,
             [FromQuery(Name = "p")] int pageNumber = 1,
-            [FromQuery(Name = "ps")] int pageSize =10)
+            [FromQuery(Name = "ps")] int pageSize = 3)
         {
             var postQuery = new PostQuery()
             {
                 PublishedOnly = true,
 
-                Keyword = keyword,
+                Keyword = keyword
 
             };
 

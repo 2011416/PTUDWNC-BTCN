@@ -34,7 +34,7 @@ namespace TatBlog.Data.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(
-                typeof(CategoryMap).Assembly );
+                typeof(CategoryMap).Assembly);
         }
     }
 }

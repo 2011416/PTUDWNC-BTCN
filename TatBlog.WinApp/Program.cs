@@ -19,17 +19,17 @@ IBlogRepository blogRepo = new BlogRepository(context);
 ////var posts = await blogRepo.GetPopularArticlesAsync(3);
 
 //// Tạo đối tượng chứa tham số phân trang
-////var pagingParams = new PagingParams
-////{
-////    PageNumber = 1,        //Lấy kết quả ở trang số 1
-////    PageSize = 5,          //Lấy 5 mẫu ti
-////    SortColumn = "Name",   // Sắp xếp theo tên
-////    SortOrder = "DESC"     //Theo chiều giảm dần
-////};
+var pagingParams = new PagingParams
+{
+    PageNumber = 1,        //Lấy kết quả ở trang số 1
+    PageSize = 5,          //Lấy 5 mẫu ti
+    SortColumn = "Name",   // Sắp xếp theo tên
+    SortOrder = "DESC"     //Theo chiều giảm dần
+};
 
 
 ////// Lấy danh sách từ khóa
-////var tagsList = await blogRepo.GetPagedTagsAsync(pagingParams);
+var tagslist = await blogRepo.GetPagedTagsAsync(pagingParams);
 
 ////// Xuất ra màn hình
 ////Console.WriteLine("{0,-5}{1,-50}{2,10}",

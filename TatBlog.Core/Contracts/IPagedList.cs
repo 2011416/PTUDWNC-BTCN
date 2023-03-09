@@ -24,6 +24,8 @@ namespace TatBlog.Core.Contracts
 
         bool IsFirstPage { get; }
 
+        bool IsLastPage { get; }
+
         int FirstItemIndex { get; }
 
         int LastItemIndex { get; }

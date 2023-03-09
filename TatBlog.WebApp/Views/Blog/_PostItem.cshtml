@@ -16,23 +16,41 @@
             </div>
             <div class="col-md-8">
                 <div class="card-body">
+                    <a class="text-decoration-none text-black" asp-controller="Blog"
+                       asp-action="Post"
+                       asp-route-year="@Model.PostedDate.Year"
+                       asp-route-month="@Model.PostedDate.Month"
+                       asp-route-day="@Model.PostedDate.Day"
+                       asp-route-slug="@Model.UrlSlug"
+                       title="@Model.Title">
+
                     <h5 class="card-title">
                         @Model.Title
                     </h5>
+                    </a>
                     <p class="card-text">
                         <small class="text-muted">
                             Tác giả:
                         </small>
                         <span class="text-primary">
+                            <a class="text-decoration-none asp-controller="Blog"
+                               asp-action="Author"
+                               asp-route-slug="@Model.Author.UrlSlug"
+                               title="@Model.Title">
                             @Model.Author.FullName
+                            </a>
                         </span>
                         <small class="text-muted">
-                            Chủ đề:
-                        </small>
-                        <span class="text-primary">
-                            @Model.Category.Name
-                        </span>
+                            Chủ đề: 
+                            </small>
+                            <a class="text-decoration-none asp-controller="Blog"
+                                asp-action="Category"
+                                asp-route-slug="@Model.Category.UrlSlug"
+                                title="@Model.Title">
+                                @Model.Category.Name
+                            </a>                        
                     </p>
+
                     <p class="card-text">
                         @Html.Raw(Model.ShortDescription)
                     </p>
@@ -49,8 +67,8 @@
                            asp-route-slug="@Model.UrlSlug"
                            class="btn btn-primary"
                            title="@Model.Title">
-                           Xem chi tiết
-                       </a>
+                            Xem chi tiết
+                        </a>
                     </div>
                 </div>
             </div>
