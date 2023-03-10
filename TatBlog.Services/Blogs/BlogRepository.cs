@@ -78,10 +78,10 @@ namespace TatBlog.Services.Blogs
         }
 
         public async Task<IList<CategoryItem>> GetCategoriesAsync(bool showOnMenu = false, CancellationToken cancellationToken = default)
-        {           
+        {
             IQueryable<Category> categories = _context.Set<Category>();
 
-            if(showOnMenu)
+            if (showOnMenu)
             {
                 categories = categories.Where(x => x.ShowOnMenu);
             }
@@ -100,7 +100,9 @@ namespace TatBlog.Services.Blogs
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<IPagedList<TagItem>> GetPagedTagsAsync(IPagingParams pagingParams, CancellationToken cancellationToken = default)
+        public async Task<IPagedList<TagItem>> GetPagedTagsAsync(
+            IPagingParams pagingParams,
+            CancellationToken cancellationToken = default)
         {
             var tagQuery = _context.Set<Tag>()
                 .Select(x => new TagItem()
@@ -111,9 +113,8 @@ namespace TatBlog.Services.Blogs
                     Description = x.Description,
                     PostCount = x.Posts.Count(p => p.Published)
                 });
-
-            return await tagQuery
-                .ToPagedListAsync(pagingParams, cancellationToken);
+                return await tagQuery
+                      .ToPagedListAsync(pagingParams, cancellationToken);
         }
         public async Task<Tag> GetTagSlugAsync(string slug, CancellationToken cancellationToken = default)
         {
@@ -194,7 +195,7 @@ namespace TatBlog.Services.Blogs
         public async Task<IPagedList<Post>> GetPagedPostsAsync(
         PostQuery condition,
         int pageNumber = 1,
-        int pageSize =10,
+        int pageSize = 10,
         CancellationToken cancellationToken = default)
         {
             return await FilterPosts(condition).ToPagedListAsync(
@@ -307,4 +308,3 @@ namespace TatBlog.Services.Blogs
 
     }
 }
-

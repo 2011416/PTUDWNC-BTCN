@@ -29,7 +29,7 @@ var pagingParams = new PagingParams
 
 
 ////// Lấy danh sách từ khóa
-var tagslist = await blogRepo.GetPagedTagsAsync(pagingParams);
+//var tagslist = await blogRepo.GetPagedTagsAsync(pagingParams);
 
 ////// Xuất ra màn hình
 ////Console.WriteLine("{0,-5}{1,-50}{2,10}",
@@ -185,10 +185,3 @@ var tagslist = await blogRepo.GetPagedTagsAsync(pagingParams);
 //Console.WriteLine("{0, 20}{1, 45}{2, 20}", postById.Title, postById.Description, postById.UrlSlug);
 
 ////1s
-
-
-foreach (var item in categories)
-{
-    Console.WriteLine("{0,-5}{1,-50}{2,10}",
-        item.Id, item.Name, item.PostCount);
-}
