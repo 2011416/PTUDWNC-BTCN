@@ -110,10 +110,10 @@ var tagslist = await blogRepo.GetPagedTagsAsync(pagingParams);
 
 ////1a
 
-//var taglist = await blogRepo.GetTagSlugAsync("google-applications");
+var taglist = await blogRepo.GetTagSlugAsync("google-applications");
 
-//Console.WriteLine("{0, -5}{1, -10}{2, 20}{3, 20}", "ID", "Name", "Description", "Slug");
-//Console.WriteLine("{0, -5}{1, -10}{2, 20}{3, 30}", taglist?.Id, taglist?.Name, taglist?.Description, taglist?.UrlSlug);
+Console.WriteLine("{0, -5}{1, -10}{2, 20}{3, 20}", "ID", "Name", "Description", "Slug");
+Console.WriteLine("{0, -5}{1, -10}{2, 20}{3, 30}", taglist?.Id, taglist?.Name, taglist?.Description, taglist?.UrlSlug);
 
 ////var tagList = await blogRepo.GetTagSlugAsync("google-applications");
 
