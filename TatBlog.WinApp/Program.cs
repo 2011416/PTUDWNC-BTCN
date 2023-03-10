@@ -187,3 +187,8 @@ var tagslist = await blogRepo.GetPagedTagsAsync(pagingParams);
 ////1s
 
 
+foreach (var item in categories)
+{
+    Console.WriteLine("{0,-5}{1,-50}{2,10}",
+        item.Id, item.Name, item.PostCount);
+}
