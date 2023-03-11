@@ -17,6 +17,10 @@ namespace TatBlog.Services.Blogs
 
         Task<Post> GetPostByIdAsync(int postId, bool includeDetails = false, CancellationToken cancellationToken = default);
 
+        Task<IList<MonthlyPostCountItem>> CountMonthlyPostsAsync(int numMonths, CancellationToken cancellationToken = default);
+
+        Task<IList<Post>> GetRandomPostsAsync(int randomOfPosts, CancellationToken cancellationToken = default);
+
 
         // Tìm Top N Bài viết phổ được nhiều người xem nhất
         Task<IList<Post>> GetPopularArticlesAsync( int numPosts, CancellationToken cancellationToken= default);

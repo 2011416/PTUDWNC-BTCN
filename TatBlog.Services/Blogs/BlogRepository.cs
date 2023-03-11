@@ -51,6 +51,18 @@ namespace TatBlog.Services.Blogs
                 .FirstOrDefaultAsync(x => x.Id == postId, cancellationToken);
         }
 
+        public async Task<IList<Post>> GetRandomPostsAsync(int randomOfPosts, CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Post>()
+                .Include(a => a.Author)
+                .Include(c => c.Category)
+                .Include(t => t.Tags)
+                .Where(x => x.Published)
+                .OrderBy(x => Guid.NewGuid())
+                .Take(randomOfPosts)
+                .ToListAsync(cancellationToken);
+        }
+
         public async Task<IList<Post>> GetPopularArticlesAsync(int numPosts, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Post>()
@@ -189,6 +201,24 @@ namespace TatBlog.Services.Blogs
         public async Task<Post> GetPostByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Post>().FindAsync(id);
+        }
+
+
+
+        public async Task<IList<MonthlyPostCountItem>> CountMonthlyPostsAsync(
+        int numMonths, CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Post>()
+                .GroupBy(x => new { x.PostedDate.Year, x.PostedDate.Month })
+                .Select(g => new MonthlyPostCountItem()
+                {
+                    Year = g.Key.Year,
+                    Month = g.Key.Month,
+                    PostCount = g.Count(x => x.Published)
+                })
+                .OrderByDescending(x => x.Year)
+                .ThenByDescending(x => x.Month)
+                .ToListAsync(cancellationToken);
         }
 
         public async Task<IPagedList<Post>> GetPagedPostsAsync(

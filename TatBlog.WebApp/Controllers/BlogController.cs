@@ -30,6 +30,7 @@ namespace TatBlog.WebApp.Controllers
             var postsList = await _blogRepository
                 .GetPagedPostsAsync(postQuery, pageNumber, pageSize);
 
+
             ViewBag.PostQuery = postQuery;
 
             return View(postsList);
@@ -44,5 +45,41 @@ namespace TatBlog.WebApp.Controllers
 
         public IActionResult Rss()
             => Content("Nội dung sẽ được cập nhật");
+
+
+
+        public async Task<IActionResult> Tag([FromRoute(Name = "slug")] string slug)
+        {
+            var postQuery = new PostQuery()
+            {
+                TagSlug = slug,
+            };
+            ViewBag.PostQuery = postQuery;
+            var postList = await _blogRepository.GetPagedPostsAsync(postQuery);
+            return View("Index", postList);
+        }
+
+        public async Task<IActionResult> Category([FromRoute(Name = "slug")] string slug)
+        {
+            var postQuery = new PostQuery()
+            {
+                CategorySlug = slug,
+            };
+            ViewBag.PostQuery = postQuery; ;
+            var postList = await _blogRepository.GetPagedPostsAsync(postQuery);
+            return View("Index", postList);
+        }
+
+        public async Task<IActionResult> Author([FromRoute(Name = "slug")] string slug)
+        {
+            var postQuery = new PostQuery()
+            {
+                AuthorSlug = slug,
+            };
+            ViewBag.PostQuery = postQuery; ;
+            var postList = await _blogRepository.GetPagedPostsAsync(postQuery);
+            return View("Index", postList);
+        }
+
     }
 }
