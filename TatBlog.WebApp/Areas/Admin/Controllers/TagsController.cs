@@ -8,5 +8,6 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
         {
             return View();
         }
+
     }
 }

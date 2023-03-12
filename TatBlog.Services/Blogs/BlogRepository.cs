@@ -198,6 +198,12 @@ namespace TatBlog.Services.Blogs
             return await categoryQuery.ToPagedListAsync(pagingParams, cancellationToken);
         }
 
+        public async Task<Author> GetAuthorAsync(string slug, CancellationToken cancellationToken = default);
+        {
+            return await _context.Set<Author>()
+                .FirstOrDefaultAsync(a => a.UrlSlug == slug, cancellationToken);
+        }
+
         public async Task<Post> GetPostByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Post>().FindAsync(id);
