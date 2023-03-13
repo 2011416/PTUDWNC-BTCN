@@ -15,12 +15,13 @@ namespace TatBlog.Services.Blogs
 
         Task<Post> GetPostAsync(string slug, CancellationToken cancellationToken = default);
 
-        Task<Post> GetPostByIdAsync(int postId, bool includeDetails = false, CancellationToken cancellationToken = default);
+        Task<Post> GetPostByIdAsync(int id, bool published = false, CancellationToken cancellationToken = default);
+
 
         Task<IList<MonthlyPostCountItem>> CountMonthlyPostsAsync(int numMonths, CancellationToken cancellationToken = default);
 
         Task<IList<Post>> GetRandomPostsAsync(int randomOfPosts, CancellationToken cancellationToken = default);
-
+        Task<Post> CreateOrUpdatePostAsync(Post post, IEnumerable<string> tags, CancellationToken cancellationToken = default);
 
         // Tìm Top N Bài viết phổ được nhiều người xem nhất
         Task<IList<Post>> GetPopularArticlesAsync( int numPosts, CancellationToken cancellationToken= default);
@@ -51,11 +52,8 @@ namespace TatBlog.Services.Blogs
 
         Task<IList<Author>> GetAuthorsAsync(CancellationToken cancellationToken = default);
 
-        Task<Post> GetPostByIdAsync(int id, CancellationToken cancellationToken = default);
-
         Task<IPagedList<Post>> GetPagedPostsAsync(PostQuery condition, int pageNumber = 1, int pageSize = 10, CancellationToken cancellationToken = default);
 
         Task<IPagedList<T>> GetPagedPostsAsync<T>(PostQuery condition, IPagingParams pagingParams, Func<IQueryable<Post>, IQueryable<T>> mapper);
-
     }
 }

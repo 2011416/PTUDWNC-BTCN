@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SlugGenerator;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +11,8 @@ using TatBlog.Core.DTO;
 using TatBlog.Core.Entities;
 using TatBlog.Data.Contexts;
 using TatBlog.Services.Extensions;
+
+
 
 namespace TatBlog.Services.Blogs
 {
@@ -35,20 +38,20 @@ namespace TatBlog.Services.Blogs
             return await FilterPosts(postQuery).FirstOrDefaultAsync(cancellationToken);
         }
 
-        public async Task<Post> GetPostByIdAsync(
-            int postId, bool includeDetails = false,
-            CancellationToken cancellationToken = default)
+        public async Task<Post> GetPostByIdAsync(int id, bool published = false, CancellationToken cancellationToken = default)
         {
-            if (!includeDetails)
+            IQueryable<Post> postQuery = _context.Set<Post>()
+                                     .Include(p => p.Category)
+                                     .Include(p => p.Author)
+                                     .Include(p => p.Tags);
+
+            if (published)
             {
-                return await _context.Set<Post>().FindAsync(postId);
+                postQuery = postQuery.Where(x => x.Published);
             }
 
-            return await _context.Set<Post>()
-                .Include(x => x.Category)
-                .Include(x => x.Author)
-                .Include(x => x.Tags)
-                .FirstOrDefaultAsync(x => x.Id == postId, cancellationToken);
+            return await postQuery.Where(p => p.Id.Equals(id))
+                                  .FirstOrDefaultAsync(cancellationToken);
         }
 
         public async Task<IList<Post>> GetRandomPostsAsync(int randomOfPosts, CancellationToken cancellationToken = default)
@@ -61,6 +64,73 @@ namespace TatBlog.Services.Blogs
                 .OrderBy(x => Guid.NewGuid())
                 .Take(randomOfPosts)
                 .ToListAsync(cancellationToken);
+        }
+
+        public async Task<Post> CreateOrUpdatePostAsync(Post post, IEnumerable<string> tags, CancellationToken cancellationToken = default)
+        {
+            // Check if the post already exists in the database
+            var postExists = await _context.Set<Post>().AnyAsync(s => s.Id == post.Id, cancellationToken);
+
+
+            // Create an empty list of tags for a new post
+            if (!postExists || post.Tags == null)
+            {
+                post.Tags = new List<Tag>();
+            }
+            // Load the tags for an existing post
+            else if (post.Tags == null || post.Tags.Count == 0)
+            {
+                await _context.Entry(post)
+                    .Collection(x => x.Tags)
+                    .LoadAsync(cancellationToken);
+            }
+
+            // Process the valid tags provided for the post
+            var validTags = tags.Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => new
+                {
+                    Name = x,
+                    Slug = x.GenerateSlug()
+                })
+                .GroupBy(x => x.Slug)
+                .ToDictionary(g => g.Key, g => g.First().Name);
+
+            foreach (var kv in validTags)
+            {
+                var tagExists = post.Tags.Any(x => string.Compare(x.UrlSlug, kv.Key, StringComparison.InvariantCultureIgnoreCase) == 0);
+                if (tagExists) continue;
+
+                // Get the existing tag or create a new one
+                var tag = await GetTagSlugAsync(kv.Key, cancellationToken) ?? new Tag()
+                {
+                    Name = kv.Value,
+                    Description = kv.Value,
+                    UrlSlug = kv.Key,
+                    Posts = new List<Post>()
+                };
+
+                if (tag.Posts.All(p => p.Id != post.Id))
+                {
+                    tag.Posts.Add(post);
+                }
+
+                post.Tags.Add(tag);
+            }
+
+            // Add or update the post in the database
+            if (postExists)
+            {
+                _context.Posts.Update(post);
+            }
+            else
+            {
+                _context.Posts.Add(post);
+            }
+
+            var enries = _context.ChangeTracker.Entries();
+            // Save changes to the database
+            await _context.SaveChangesAsync(cancellationToken);
+            return post;
         }
 
         public async Task<IList<Post>> GetPopularArticlesAsync(int numPosts, CancellationToken cancellationToken = default)
@@ -198,18 +268,11 @@ namespace TatBlog.Services.Blogs
             return await categoryQuery.ToPagedListAsync(pagingParams, cancellationToken);
         }
 
-        public async Task<Author> GetAuthorAsync(string slug, CancellationToken cancellationToken = default);
+        public async Task<IList<Author>> GetAuthorsAsync(CancellationToken cancellationToken = default)
         {
             return await _context.Set<Author>()
-                .FirstOrDefaultAsync(a => a.UrlSlug == slug, cancellationToken);
+                .ToListAsync(cancellationToken);
         }
-
-        public async Task<Post> GetPostByIdAsync(int id, CancellationToken cancellationToken = default)
-        {
-            return await _context.Set<Post>().FindAsync(id);
-        }
-
-
 
         public async Task<IList<MonthlyPostCountItem>> CountMonthlyPostsAsync(
         int numMonths, CancellationToken cancellationToken = default)
@@ -340,7 +403,7 @@ namespace TatBlog.Services.Blogs
             //	.WhereIf(condition.Month > 0, x => x.PostedDate.Month == condition.Month)
             //	.WhereIf(!string.IsNullOrWhiteSpace(condition.TitleSlug), x => x.UrlSlug == condition.TitleSlug);
         }
-
+     
     }
 }
 

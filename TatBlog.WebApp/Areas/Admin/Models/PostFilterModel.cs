@@ -9,18 +9,19 @@ namespace TatBlog.WebApp.Areas.Admin.Models
         [DisplayName("Từ khóa")]
         public string Keyword { get; set; }
         [DisplayName("Tác giả")]
-        public int? AuthorId { get; set; }
+        public int AuthorId { get; set; }
         [DisplayName("Chủ đề")]
-        public int? CategoryId { get; set; }
+        public int CategoryId { get; set; }
         [DisplayName("Năm")]
-        public int? PostedYear { get; set; }
+        public int Year { get; set; }
         [DisplayName("Tháng")]
-        public int? PostedMonth { get; set; }
+        public int Month { get; set; }
 
         public IEnumerable<SelectListItem> AuthorList { get; set; }
         public IEnumerable<SelectListItem> CategoryList { get; set; }
         public IEnumerable<SelectListItem> MonthList { get; set; }
-        public PostFilterModel()
+  
+        public PostFilterModel() 
         {
             MonthList = Enumerable.Range(1, 12)
                 .Select(m => new SelectListItem()
