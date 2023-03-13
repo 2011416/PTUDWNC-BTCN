@@ -68,16 +68,14 @@ namespace TatBlog.Services.Blogs
 
         public async Task<Post> CreateOrUpdatePostAsync(Post post, IEnumerable<string> tags, CancellationToken cancellationToken = default)
         {
-            // Check if the post already exists in the database
+
             var postExists = await _context.Set<Post>().AnyAsync(s => s.Id == post.Id, cancellationToken);
 
 
-            // Create an empty list of tags for a new post
             if (!postExists || post.Tags == null)
             {
                 post.Tags = new List<Tag>();
             }
-            // Load the tags for an existing post
             else if (post.Tags == null || post.Tags.Count == 0)
             {
                 await _context.Entry(post)
@@ -85,7 +83,6 @@ namespace TatBlog.Services.Blogs
                     .LoadAsync(cancellationToken);
             }
 
-            // Process the valid tags provided for the post
             var validTags = tags.Where(x => !string.IsNullOrWhiteSpace(x))
                 .Select(x => new
                 {
@@ -101,7 +98,7 @@ namespace TatBlog.Services.Blogs
                 if (tagExists) continue;
 
                 // Get the existing tag or create a new one
-                var tag = await GetTagSlugAsync(kv.Key, cancellationToken) ?? new Tag()
+                var tag = await GetTagsAsync(kv.Key, cancellationToken) ?? new Tag()
                 {
                     Name = kv.Value,
                     Description = kv.Value,
