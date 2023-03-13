@@ -47,7 +47,7 @@ namespace TatBlog.Services.Media
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Could not save file {originalFileName}");
+                _logger.LogError(ex, $"Could not save file '{originalFileName}'.");
                 return null;
             }
         }
