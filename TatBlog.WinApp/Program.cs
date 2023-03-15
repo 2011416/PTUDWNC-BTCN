@@ -185,5 +185,3 @@ var pagingParams = new PagingParams
 //Console.WriteLine("{0, 20}{1, 45}{2, 20}", postById.Title, postById.Description, postById.UrlSlug);
 
 ////1s
-
-
