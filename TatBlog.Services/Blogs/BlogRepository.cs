@@ -66,21 +66,17 @@ namespace TatBlog.Services.Blogs
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<Post> CreateOrUpdatePostAsync(Post post, IEnumerable<string> tags, CancellationToken cancellationToken = default)
+        public async Task<Post> CreateOrUpdatePostAsync(
+          Post post, IEnumerable<string> tags,
+          CancellationToken cancellationToken = default)
         {
-
-            var postExists = await _context.Set<Post>().AnyAsync(s => s.Id == post.Id, cancellationToken);
-
-
-            if (!postExists || post.Tags == null)
+            if (post.Id > 0)
+            {
+                await _context.Entry(post).Collection(x => x.Tags).LoadAsync(cancellationToken);
+            }
+            else
             {
                 post.Tags = new List<Tag>();
-            }
-            else if (post.Tags == null || post.Tags.Count == 0)
-            {
-                await _context.Entry(post)
-                    .Collection(x => x.Tags)
-                    .LoadAsync(cancellationToken);
             }
 
             var validTags = tags.Where(x => !string.IsNullOrWhiteSpace(x))
@@ -92,43 +88,33 @@ namespace TatBlog.Services.Blogs
                 .GroupBy(x => x.Slug)
                 .ToDictionary(g => g.Key, g => g.First().Name);
 
+
             foreach (var kv in validTags)
             {
-                var tagExists = post.Tags.Any(x => string.Compare(x.UrlSlug, kv.Key, StringComparison.InvariantCultureIgnoreCase) == 0);
-                if (tagExists) continue;
+                if (post.Tags.Any(x => string.Compare(x.UrlSlug, kv.Key, StringComparison.InvariantCultureIgnoreCase) == 0)) continue;
 
-                // Get the existing tag or create a new one
-                var tag = await GetTagsAsync(kv.Key, cancellationToken) ?? new Tag()
+                var tag = await GetTagBySlugAsync(kv.Key, cancellationToken) ?? new Tag()
                 {
                     Name = kv.Value,
                     Description = kv.Value,
-                    UrlSlug = kv.Key,
-                    Posts = new List<Post>()
+                    UrlSlug = kv.Key
                 };
-
-                if (tag.Posts.All(p => p.Id != post.Id))
-                {
-                    tag.Posts.Add(post);
-                }
 
                 post.Tags.Add(tag);
             }
 
-            // Add or update the post in the database
-            if (postExists)
-            {
-                _context.Posts.Update(post);
-            }
-            else
-            {
-                _context.Posts.Add(post);
-            }
+            post.Tags = post.Tags.Where(t => validTags.ContainsKey(t.UrlSlug)).ToList();
 
-            var enries = _context.ChangeTracker.Entries();
-            // Save changes to the database
+            if (post.Id > 0)
+                _context.Update(post);
+            else
+                _context.Add(post);
+
             await _context.SaveChangesAsync(cancellationToken);
+
             return post;
         }
+
 
         public async Task<IList<Post>> GetPopularArticlesAsync(int numPosts, CancellationToken cancellationToken = default)
         {
@@ -205,6 +191,13 @@ namespace TatBlog.Services.Blogs
             }
 
             return await tagsQuery.FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<Tag> GetTagBySlugAsync(string slug, CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Tag>()
+                            .Include(p => p.Posts)
+                            .FirstOrDefaultAsync(x => x.UrlSlug == slug, cancellationToken);
         }
 
         public async Task<bool> DeleteTagByNameAsync(int id, CancellationToken cancellationToken = default)

@@ -1,4 +1,6 @@
-﻿using MapsterMapper;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.VisualBasic;
@@ -14,13 +16,18 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
 {
     public class PostsController :Controller
     {
-
+        private readonly ILogger<PostsController> _logger;
         private readonly IBlogRepository _blogRepository;
         private readonly IMediaManager _mediaManager;
         private readonly IMapper _mapper;
 
-        public PostsController(IBlogRepository blogRepository, IMediaManager mediaManager, IMapper mapper)
+        public PostsController(
+            ILogger<PostsController> logger,
+            IBlogRepository blogRepository,
+            IMediaManager mediaManager, 
+            IMapper mapper)
         {
+            _logger = logger;
             _blogRepository = blogRepository;
             _mediaManager = mediaManager;
             _mapper = mapper;
@@ -29,10 +36,18 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index(PostFilterModel model)
         {
+            _logger.LogInformation("Tạo điều kiện truy vấn");
+
+            // Sử dụng Mapster để tạo đối tượng PostQuery
+            // từ đối tượng PostFillterModel model
             var postQuery = _mapper.Map<PostQuery>(model);
+
+            _logger.LogInformation("Lấy danh sách bài viết từ CSDL");
 
             ViewBag.PostsList = await _blogRepository
                 .GetPagedPostsAsync(postQuery,1,10);
+
+            _logger.LogInformation("Chuẩn bị dữ liệu cho ViewModel");
 
             await PopulatePostFilterModelAsync(model);
 
@@ -96,8 +111,17 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(PostEditModel model)
+        public async Task<IActionResult> Edit(
+            IValidator<PostEditModel> postValidator,
+            PostEditModel model)
         {
+            var validationResult = await postValidator.ValidateAsync(model);
+
+            if (!validationResult.IsValid) 
+            {
+                validationResult.AddToModelState(ModelState);
+            }
+
             if (!ModelState.IsValid)
             {
                 await PopulatePostEditModelAsync(model);
@@ -123,14 +147,16 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
                 post.ModifiedDate = DateTime.Now;
             }
 
-            if(model.ImageFile?.Length > 0) 
+            // Nếu người dùng có upload hình ảnh minh họa cho bài viết
+            if (model.ImageFile?.Length > 0) 
             {
-
+                // Thì thực hiện việc lưu tập tin vào thư mục uploads
                 var newImagePath = await _mediaManager.SaveFileAsync(
                     model.ImageFile.OpenReadStream(),
                     model.ImageFile.FileName,
                     model.ImageFile.ContentType);
 
+               // Nếu lưu thành công, xóa tập tin hình ảnh cũ (nếu có)
                 if(!string.IsNullOrWhiteSpace(newImagePath))
                 {
                     await _mediaManager.DeleteFileAsync(post.ImageUrl);
