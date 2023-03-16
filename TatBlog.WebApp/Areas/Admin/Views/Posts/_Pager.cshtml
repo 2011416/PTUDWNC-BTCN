@@ -2,7 +2,7 @@
 
 @{
     var postQuery = (ViewBag.PostQuery as PostQuery) ?? new PostQuery();
-    var actionName = "Index";
+    var actionName = "Posts";
     var slug = "";
 
     if(!string.IsNullOrWhiteSpace(postQuery.AuthorSlug))
@@ -24,9 +24,9 @@
     <div class="text-center my-4">
         @if (Model.HasPreviousPage)
         {
-            <a asp-area="Posts"
-               asp-controller="Admin"
-               asp-action="@actionName"
+            <a asp-area="Admin"
+               asp-controller="@actionName"
+               asp-action="Index"
                asp-route-slug="@slug"
                asp-route-k="@postQuery.Keyword"
                asp-route-p="@(Model.PageNumber -1)"
@@ -48,9 +48,9 @@
 
         @if(Model.HasNextPage)
         {
-            <a asp-area="Posts"
-               asp-controller="Admin"
-               asp-action="@actionName"
+            <a asp-area="Admin"
+       asp-controller="@actionName"
+               asp-action="Index"
                asp-route-slug="@slug"
                asp-route-k="@postQuery.Keyword"
                asp-route-p="@(Model.PageNumber + 1)"

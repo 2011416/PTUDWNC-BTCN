@@ -1,6 +1,6 @@
 ﻿@model TatBlog.WebApp.Areas.Admin.Models.PostFilterModel
 @{
-    ViewData["PageTitle"] = "Danh sachs bài viết";
+    ViewData["PageTitle"] = "Danh sách bài viết";
 
     var postsList = ViewBag.PostsList as IPagedList<Post>;
 }
@@ -50,14 +50,13 @@
                         @post.Category.Name
                     </td>
                     <td>
-                        @(
-                    post.Published ? "Có" : "Không"
-                    )
+                        @(post.Published ? "Có" : "Không")
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+    <partial name="_Pager" model="@postsList" />
 }
 else
 {
@@ -65,7 +64,7 @@ else
         Không tìm thấy bài viết nào
     </h1>
 }
-<partial name="_Pager" model="@postsList" />
+
 
 }
 "
