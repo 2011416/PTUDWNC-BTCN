@@ -10,7 +10,10 @@
 </h1>
 
 <!-- Hiển thị Form đề tìm bài viết -->
-<partial name="_PostFilterPane" model="Model"/>
+<partial name="_PostFilterPane" model="Model" />
+
+
+
 
 @if (postsList != null && postsList.Count > 0)
 {
@@ -32,7 +35,7 @@
                            asp-controller="Posts"
                            asp-action="Edit"
                            asp-route-id="@post.Id"
-        class="text-bold">
+                            class="text-bold">
                             @post.Title
                         </a>
 
@@ -62,4 +65,7 @@ else
         Không tìm thấy bài viết nào
     </h1>
 }
+<partial name="_Pager" model="@postsList" />
+
 }
+"
