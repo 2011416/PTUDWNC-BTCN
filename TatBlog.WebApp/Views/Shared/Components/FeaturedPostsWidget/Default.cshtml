@@ -14,6 +14,9 @@
                asp-route-slug=@post.UrlSlug
                    title="@post.Description">
                     @post.Title
+                    <span class="text-muted fw-normal">
+                        (@post.ViewCount)
+                    </span>
                 </a>
             </li>
         }
