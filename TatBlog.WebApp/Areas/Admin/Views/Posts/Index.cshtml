@@ -50,7 +50,37 @@
                         @post.Category.Name
                     </td>
                     <td>
-                        @(post.Published ? "Có" : "Không")
+                        @if (post.Published)
+                        {
+                            <a asp-area="Admin"
+                               asp-controller="Posts"
+                               asp-action="PostPublishedStatus"
+                               asp-route-id=@post.Id
+                                           class="btn btn-success">
+                                            Có
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-area="Admin"
+                               asp-controller="Posts"
+                               asp-action="PostPublishedStatus"
+                               asp-route-id=@post.Id
+                                           class="btn btn-danger"
+                                           onclick="confirmDelete(@post.Id)">
+                                            Không
+                            </a>
+                        }
+                    </td>
+                    <td>
+                        <a asp-area="Admin"
+                           asp-controller="Posts"
+                           asp-action="DeletePost"
+                           asp-route-id=@post.Id
+                                   onclick="return confirm('Bạn muốn xóa bài viết này?')"
+                                   class="text-danger">
+                                    Xóa
+                        </a>
                     </td>
                 </tr>
             }

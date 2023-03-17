@@ -22,6 +22,8 @@ namespace TatBlog.Services.Blogs
 
         Task<IList<Post>> GetRandomPostsAsync(int randomOfPosts, CancellationToken cancellationToken = default);
         Task<Post> CreateOrUpdatePostAsync(Post post, IEnumerable<string> tags, CancellationToken cancellationToken = default);
+        Task PostPublishedStatusAsync(int id, CancellationToken cancellationToken = default);
+        Task<bool> DeletePostById(int id, CancellationToken cancellationToken = default);
 
         // Tìm Top N Bài viết phổ được nhiều người xem nhất
         Task<IList<Post>> GetPopularArticlesAsync( int numPosts, CancellationToken cancellationToken= default);

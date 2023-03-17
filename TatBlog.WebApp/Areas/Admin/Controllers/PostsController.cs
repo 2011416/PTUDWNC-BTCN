@@ -27,11 +27,12 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
             ILogger<PostsController> logger,
             IBlogRepository blogRepository,
             IMediaManager mediaManager, 
-            IMapper mapper)
+            IMapper mapper,
+            IValidator<PostEditModel> postValidator)
         {
             _logger = logger;
             _blogRepository = blogRepository;
-            _postValidator = new PostValidator(_blogRepository);
+            _postValidator = postValidator;
             _mediaManager = mediaManager;
             _mapper = mapper;
         }
@@ -183,6 +184,20 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
             return slugExitsted
                 ? Json($"Slug '{urlSlug}' đã được sử dụng")
                 : Json(true);
+        }
+
+        public async Task<IActionResult> DeletePost(int id)
+        {
+            await _blogRepository.DeletePostById(id);
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> PostPublishedStatus(int id)
+        {
+            await _blogRepository.PostPublishedStatusAsync(id);
+
+            return RedirectToAction("Index");
         }
 
     }

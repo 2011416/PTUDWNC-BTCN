@@ -115,6 +115,20 @@ namespace TatBlog.Services.Blogs
             return post;
         }
 
+        public async Task PostPublishedStatusAsync(int id, CancellationToken cancellationToken = default)
+        {
+            await _context.Set<Post>()
+                .Where(x => x.Id == id)
+                .ExecuteUpdateAsync(p => p.SetProperty(x => x.Published, x => !x.Published), cancellationToken);
+        }
+
+        public async Task<bool> DeletePostById(int id, CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Post>()
+                .Where(x => x.Id == id)
+                .ExecuteDeleteAsync(cancellationToken) > 0;
+        }
+
 
         public async Task<IList<Post>> GetPopularArticlesAsync(int numPosts, CancellationToken cancellationToken = default)
         {

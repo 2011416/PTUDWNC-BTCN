@@ -11,7 +11,8 @@
               <a asp-controller="Blog"
                asp-action="Tag"
                asp-route-slug=@tag.UrlSlug
-                   title="@tag.Name">
+                   title="@tag.Name"
+                   class="btn btn-default btn-outline-dark">
                     @tag.Name
                 </a>
         }
