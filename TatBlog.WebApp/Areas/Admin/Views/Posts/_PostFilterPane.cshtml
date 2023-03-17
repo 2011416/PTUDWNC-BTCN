@@ -50,6 +50,12 @@
             <option value="" selected>-- Chọn tháng --</option>
         </select>
     </div>
+    <div class="col-auto d-flex">
+        <input type="checkbox"
+               asp-for="NotPublished"
+               class="form-check me-2" />
+        <label asp-for="NotPublished">Chưa xuất bản</label>
+    </div>
 
     <div class="col-auto">
         <button type="submit" class="btn btn-primary">Tìm/Lọc</button>
