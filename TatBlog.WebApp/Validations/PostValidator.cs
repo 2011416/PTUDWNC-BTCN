@@ -14,8 +14,9 @@ namespace TatBlog.WebApp.Validations
 
             RuleFor(x => x.Title)
                 .NotEmpty()
-                .MaximumLength(500)
-                .WithMessage("Không được để trống phần tiêu đề");
+                .WithMessage("Không được để trống phần tiêu đề")
+                .MaximumLength(500);
+           
 
             RuleFor(x => x.ShortDescription)
                 .NotEmpty()
@@ -27,17 +28,19 @@ namespace TatBlog.WebApp.Validations
 
             RuleFor(x => x.Meta)
                 .NotEmpty()
-                .MaximumLength(1000)
-                .WithMessage("Không được để trống Metadata");
+                .WithMessage("Không được để trống Metadata")
+                .MaximumLength(1000);
+
 
             RuleFor(x => x.UrlSlug)
                 .NotEmpty()
-                .MaximumLength(1000)
-                .WithMessage("Không được để trống Slug");
+                .WithMessage("Không được để trống Slug")
+                .MaximumLength(1000);
+                
 
             RuleFor(x => x.UrlSlug)
                 .MustAsync(async (postModel, slug, cancellationToken) =>
-                !await blogRepository.IsPostSlugExistedAsync(
+                !await _blogRepository.IsPostSlugExistedAsync(
                     postModel.Id, slug, cancellationToken))
                     .WithMessage("Slug '{PropertyValue}' đã được sử dụng");
 

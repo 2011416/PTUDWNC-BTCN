@@ -10,6 +10,7 @@ using TatBlog.Core.Entities;
 using TatBlog.Services.Blogs;
 using TatBlog.Services.Media;
 using TatBlog.WebApp.Areas.Admin.Models;
+using TatBlog.WebApp.Validations;
 using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace TatBlog.WebApp.Areas.Admin.Controllers
@@ -17,6 +18,7 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
     public class PostsController :Controller
     {
         private readonly ILogger<PostsController> _logger;
+        private readonly IValidator<PostEditModel> _postValidator;
         private readonly IBlogRepository _blogRepository;
         private readonly IMediaManager _mediaManager;
         private readonly IMapper _mapper;
@@ -29,6 +31,7 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
         {
             _logger = logger;
             _blogRepository = blogRepository;
+            _postValidator = new PostValidator(_blogRepository);
             _mediaManager = mediaManager;
             _mapper = mapper;
         }
@@ -112,10 +115,9 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Edit(
-            IValidator<PostEditModel> postValidator,
             PostEditModel model)
         {
-            var validationResult = await postValidator.ValidateAsync(model);
+            var validationResult = await _postValidator.ValidateAsync(model);
 
             if (!validationResult.IsValid) 
             {
