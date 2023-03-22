@@ -10,7 +10,7 @@
 </h1>
 
 <!-- Hiển thị Form đề tìm bài viết -->
-<partial name="_CategoryFilterPane" model="Model" />
+<partial name="_CategoryFilterPane" model="@Model" />
 
 
 
@@ -20,8 +20,8 @@
     <table class="table table-responsive table-striped">
         <thead>
             <tr>
-                <th>chủ đề</th>
-                <th>Hiển thị trên menu</th>
+                <th>Chủ đề</th>
+                <th>Hiện trên menu</th>
                 <th>Số lượng</th>
                 <th>Xóa</th>
             </tr>
@@ -47,14 +47,14 @@
                         @(category.ShowOnMenu ? "Có" : "Không")
                     </td>
                     <td class="col-1">
-                       @category.PostCount    
-                       </td>
-                       <td class="col-1">
+                        @category.PostCount
+                    </td>
+                    <td class="col-1">
                         <a asp-area="Admin"
                    asp-controller="Categories"
                    asp-action="DeleteCategory"
                    asp-route-id=@category.Id
-                           onclick="return confirm('Bạn muốn xóa bài viết này?')"
+                           onclick="return confirm('Bạn có thực sự muốn xóa chủ đề này không?')"
                            class="text-danger">
                             Xóa
                         </a>

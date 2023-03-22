@@ -258,17 +258,17 @@ namespace TatBlog.Services.Blogs
 
         public async Task<IPagedList<CategoryItem>> GetPagedCategoriesAsync(IPagingParams pagingParams, CancellationToken cancellationToken = default)
         {
-            var categoryQuery = _context.Set<Category>()
+            return await _context.Set<Category>()
                 .Select(x => new CategoryItem()
                 {
                     Id = x.Id,
                     Name = x.Name,
                     UrlSlug = x.UrlSlug,
                     Description = x.Description,
+                    ShowOnMenu = x.ShowOnMenu,
                     PostCount = x.Posts.Count(p => p.Published)
-                });
-
-            return await categoryQuery.ToPagedListAsync(pagingParams, cancellationToken);
+                })
+                .ToPagedListAsync(pagingParams, cancellationToken);
         }
 
         public async Task<Category> CreateOrUpdateCategoryAsync(

@@ -1,13 +1,13 @@
-﻿@model TatBlog.WebApp.Areas.Admin.Models.CategoryEditModel
+﻿@model TatBlog.WebApp.Areas.Admin.Models.AuthorEditModel
 
 @{
-    ViewData["PageTitle"] = "Thêm/Cập nhật chủ đề";
+    ViewData["PageTitle"] = "Thêm/Cập nhật tác giả";
 }
 
-<h1>Thêm/Cập nhật chủ đề</h1>
+<h1>Thêm/Cập nhật tác giả</h1>
 
 <form asp-area="Admin"
-      asp-controller="Categories"
+      asp-controller="Authors"
       asp-action="Edit"
       enctype="multipart/form-data"
       method="post">
@@ -15,11 +15,11 @@
     <input type="hidden" asp-for="Id" />
 
     <div class="row mb-3">
-        <label asp-for="Name"
+        <label asp-for="FullName"
                class="col-sm-2 col-form-label"></label>
         <div class="col-sm-10">
-            <input type="text" class="form-control" asp-for="Name">
-            <span asp-validation-for="Name"
+            <input type="text" class="form-control" asp-for="FullName">
+            <span asp-validation-for="FullName"
                   class="text-danger"></span>
         </div>
     </div>
@@ -34,19 +34,18 @@
     </div>
 
     <div class="row mb-3">
-        <label asp-for="Description" class="col-sm-2 col-form-label"></label>
+        <label asp-for="Email" class="col-sm-2 col-form-label"></label>
         <div class="col-sm-10">
-            <textarea class="form-control" asp-for="Description"></textarea>
-            <span asp-validation-for="Description" class="text-danger"></span>
+            <textarea class="form-control" asp-for="Email"></textarea>
+            <span asp-validation-for="Email" class="text-danger"></span>
         </div>
     </div>
 
     <div class="row mb-3">
-        <div class="col-sm-10 offset-sm-2">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" asp-for="ShowOnMenu" />
-                <label class="form-check-label" asp-for="ShowOnMenu"></label>
-            </div>
+        <label asp-for="Notes" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <textarea class="form-control" asp-for="Notes" rows="10"></textarea>
+            <span asp-validation-for="Notes" class="text-danger"></span>
         </div>
     </div>
 
@@ -55,7 +54,7 @@
             Lưu
         </button>
         <a asp-area="Admin"
-           asp-controller="Categories"
+           asp-controller="Authors"
            asp-action="Index"
            class="btn btn-danger px-3 py-2">
             Hủy & quay lại
