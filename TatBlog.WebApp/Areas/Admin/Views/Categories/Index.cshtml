@@ -1,7 +1,73 @@
-﻿@{
-    ViewData["PageTitle"] = "Danh mục";
+﻿@model TatBlog.WebApp.Areas.Admin.Models.CategoryFilterModel
+@{
+    ViewData["PageTitle"] = "Danh sách chủ đề";
+
+    var categoriesList = ViewBag.CategoriesList as IPagedList<CategoryItem>;
 }
 
 <h1>
     Danh sách chủ đề
 </h1>
+
+<!-- Hiển thị Form đề tìm bài viết -->
+<partial name="_CategoryFilterPane" model="Model" />
+
+
+
+
+@if (categoriesList != null && categoriesList.Count > 0)
+{
+    <table class="table table-responsive table-striped">
+        <thead>
+            <tr>
+                <th>chủ đề</th>
+                <th>Hiển thị trên menu</th>
+                <th>Số lượng</th>
+                <th>Xóa</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in categoriesList)
+            {
+                <tr>
+                    <td>
+                        <a asp-area="Admin"
+                   asp-controller="Categories"
+                   asp-action="Edit"
+                   asp-route-id="@category.Id"
+                           class="text-bold">
+                            @category.Name
+                        </a>
+
+                        <p class="text-muted">
+                            @category.Description
+                        </p>
+                    </td>
+                    <td class="col-1">
+                        @(category.ShowOnMenu ? "Có" : "Không")
+                    </td>
+                    <td class="col-1">
+                       @category.PostCount    
+                       </td>
+                       <td class="col-1">
+                        <a asp-area="Admin"
+                   asp-controller="Categories"
+                   asp-action="DeleteCategory"
+                   asp-route-id=@category.Id
+                           onclick="return confirm('Bạn muốn xóa bài viết này?')"
+                           class="text-danger">
+                            Xóa
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <partial name="_Pager" model="@categoriesList" />
+}
+else
+{
+    <h1 class="text-danger">
+        Không tìm thấy chủ đề nào
+    </h1>
+}
