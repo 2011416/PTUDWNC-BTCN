@@ -4,18 +4,23 @@
 
 
     <!-- Các chuyên mục/chủ đề -->
-@await Component.InvokeAsync("CategoriesWidget")
+    @await Component.InvokeAsync("CategoriesWidget")
 
     <!-- Top bài viết nổi bật -->
-@await Component.InvokeAsync("FeaturedPostsWidget")
+    @await Component.InvokeAsync("FeaturedPostsWidget")
 
     <!-- Bài viết bất kỳ -->
-@await Component.InvokeAsync("RandomPostsWidget")
+    @await Component.InvokeAsync("RandomPostsWidget")
 
     <!-- Các thẻ -->
     @await Component.InvokeAsync("TagCloudWidget")
 
-    <!-- Đăng ký nhận tin mới -->
+    <!--Top 4 tác giả-->
+@*    @await Component.InvokeAsync("BestAuthorsWidget")*@
 
+    <!--Bài viết trong 12 tháng-->
+    @await Component.InvokeAsync("ArchivesWidget")
+
+    <!-- Đăng ký nhận tin mới -->
 </div>
 

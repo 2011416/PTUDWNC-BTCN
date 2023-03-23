@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TatBlog.Core.DTO
 {
-    public class MonthlyPostCountItem
+    public class MonthPostCount
     {
         public int Month { get; set; }
         public int Year { get; set; }

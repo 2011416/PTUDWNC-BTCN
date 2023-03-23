@@ -21,7 +21,7 @@ namespace TatBlog.WebApp.Controllers
         {
             var postQuery = new PostQuery()
             {
-                PublishedOnly = true,
+                Published = true,
 
                 Keyword = keyword
 
@@ -70,6 +70,19 @@ namespace TatBlog.WebApp.Controllers
             return View("Index", postList);
         }
 
+            public async Task<IActionResult> Post(
+            string slug,
+            int year,
+            int month,
+            int day)
+        {
+
+            var post = await _blogRepository.GetPostAsync(year, month, day, slug);
+            await _blogRepository.IncreaseViewCountAsync(post.Id);
+ 
+            return View(post);
+        }
+
         public async Task<IActionResult> Author([FromRoute(Name = "slug")] string slug)
         {
             var postQuery = new PostQuery()
@@ -81,5 +94,19 @@ namespace TatBlog.WebApp.Controllers
             return View("Index", postList);
         }
 
+        public async Task<IActionResult> Archives(int year, int month,[FromQuery(Name = "p")] int pageNumber = 1,[FromQuery(Name = "ps")] int pageSize = 3)
+        {
+            var postQuery = new PostQuery()
+            {
+                Month = month,
+                Year = year,
+                Published = true
+            };
+
+            var postsList = await _blogRepository.GetPagedPostsAsync(postQuery, pageNumber, pageSize);
+            ViewBag.Date = new DateTime(year, month, 1);
+            ViewBag.PostQuery = postQuery;
+            return View(postsList);
+        }
     }
 }

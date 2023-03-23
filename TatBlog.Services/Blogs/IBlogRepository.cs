@@ -15,10 +15,12 @@ namespace TatBlog.Services.Blogs
 
         Task<Post> GetPostAsync(string slug, CancellationToken cancellationToken = default);
 
+        Task<Post> GetPostAsync(int year, int month, int day, string slug, CancellationToken cancellationToken = default);
+
         Task<Post> GetPostByIdAsync(int id, bool published = false, CancellationToken cancellationToken = default);
 
 
-        Task<IList<MonthlyPostCountItem>> CountMonthlyPostsAsync(int numMonths, CancellationToken cancellationToken = default);
+        Task<IList<MonthPostCount>> CountMonthPostsAsync(int numMonths, CancellationToken cancellationToken = default);
 
         Task<IList<Post>> GetRandomPostsAsync(int randomOfPosts, CancellationToken cancellationToken = default);
         Task<Post> CreateOrUpdatePostAsync(Post post, IEnumerable<string> tags, CancellationToken cancellationToken = default);
@@ -58,6 +60,7 @@ namespace TatBlog.Services.Blogs
         Task<bool> DeleteCategoryByIdAsync(int id, CancellationToken cancellationToken = default);
 
         Task<IList<Author>> GetAuthorsAsync(CancellationToken cancellationToken = default);
+        Task<IList<AuthorItem>> GetAuthorAsync(int numAuthor, CancellationToken cancellationToken = default);
 
         Task<IPagedList<Post>> GetPagedPostsAsync(PostQuery condition, int pageNumber = 1, int pageSize = 10, CancellationToken cancellationToken = default);
 

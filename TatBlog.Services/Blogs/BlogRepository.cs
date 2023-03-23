@@ -31,11 +31,39 @@ namespace TatBlog.Services.Blogs
         {
             var postQuery = new PostQuery()
             {
-                PublishedOnly = false,
+                Published = false,
                 TitleSlug = slug
             };
 
             return await FilterPosts(postQuery).FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<Post> GetPostAsync(int year, int month, int day, string slug, CancellationToken cancellationToken = default)
+        {
+            IQueryable<Post> postsQuery = _context.Set<Post>()
+                .Include(x => x.Category)
+                .Include(x => x.Author)
+                .Include(p => p.Tags);
+
+            if (year > 0)
+            {
+                postsQuery = postsQuery.Where(x => x.PostedDate.Year == year);
+            }
+            if (month > 0)
+            {
+                postsQuery = postsQuery.Where(x => x.PostedDate.Month == month);
+            }
+            if (day > 0)
+            {
+                postsQuery = postsQuery.Where(x => x.PostedDate.Day == day);
+            }
+            if (!string.IsNullOrWhiteSpace(slug))
+            {
+                postsQuery = postsQuery.Where(x => x.UrlSlug.Equals(slug));
+            }
+
+
+            return await postsQuery.FirstOrDefaultAsync(cancellationToken);
         }
 
         public async Task<Post> GetPostByIdAsync(int id, bool published = false, CancellationToken cancellationToken = default)
@@ -323,12 +351,32 @@ namespace TatBlog.Services.Blogs
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<IList<MonthlyPostCountItem>> CountMonthlyPostsAsync(
+        public async Task<IList<AuthorItem>> GetAuthorAsync(int numAuthor, CancellationToken cancellationToken = default)
+        {
+            IQueryable<Author> author = _context.Set<Author>();
+            return await author
+                .OrderBy(x => x.FullName)
+                .Select(x => new AuthorItem
+                {
+                    Id = x.Id,
+                    FullName = x.FullName,
+                    UrlSlug = x.UrlSlug,
+                    ImageUrl = x.ImageUrl,
+                    Email = x.Email,
+                    JoinedDate = x.JoinedDate,
+                    PostCount = x.Posts.Count(p => p.Published),
+                })
+                .OrderByDescending(s => s.PostCount)
+                .Take(numAuthor)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<IList<MonthPostCount>> CountMonthPostsAsync(
         int numMonths, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Post>()
                 .GroupBy(x => new { x.PostedDate.Year, x.PostedDate.Month })
-                .Select(g => new MonthlyPostCountItem()
+                .Select(g => new MonthPostCount()
                 {
                     Year = g.Key.Year,
                     Month = g.Key.Month,
@@ -370,7 +418,7 @@ namespace TatBlog.Services.Blogs
                 .Include(x => x.Author)
                 .Include(x => x.Tags);
 
-            if (condition.PublishedOnly)
+            if (condition.Published)
             {
                 posts = posts.Where(x => x.Published);
             }

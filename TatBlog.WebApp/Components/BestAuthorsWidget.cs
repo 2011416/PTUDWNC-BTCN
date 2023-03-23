@@ -3,20 +3,20 @@ using TatBlog.Services.Blogs;
 
 namespace TatBlog.WebApp.Components
 {
-    public class ArchivesWidget : ViewComponent
+    public class BestAuthorsWidget : ViewComponent
     {
         private readonly IBlogRepository _blogRepository;
 
-        public ArchivesWidget(IBlogRepository blogRepository)
+        public BestAuthorsWidget(IBlogRepository blogRepository)
         {
             _blogRepository = blogRepository;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var monthPosts = await _blogRepository.CountMonthPostsAsync(12);
+            var author = await _blogRepository.GetAuthorAsync(4);
 
-            return View(monthPosts);
+            return View(author);
         }
     }
 }
