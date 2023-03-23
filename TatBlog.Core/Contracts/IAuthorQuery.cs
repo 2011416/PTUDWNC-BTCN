@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TatBlog.Core.Contracts
 {
-    public class IAuthorQuery
+    public interface IAuthorQuery
     {
         public string Keyword { get; set; }
         public int Month { get; set; }

@@ -215,7 +215,7 @@ namespace TatBlog.Services.Blogs
                             .FirstOrDefaultAsync(x => x.UrlSlug == slug, cancellationToken);
         }
 
-        public async Task<bool> DeleteTagByNameAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<bool> DeleteTagByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Tag>()
                 .Where(x => x.Id == id)
@@ -234,6 +234,28 @@ namespace TatBlog.Services.Blogs
                     PostCount = x.Posts.Count(p => p.Published)
                 })
                 .ToListAsync();
+        }
+
+        public async Task<Tag> CreateOrUpdateTagAsync(Tag tag, CancellationToken cancellationToken = default)
+        {
+            if (_context.Set<Tag>().Any(s => s.Id == tag.Id))
+            {
+                _context.Entry(tag).State = EntityState.Modified;
+            }
+            else
+            {
+                _context.Tags.Add(tag);
+            }
+
+            await _context.SaveChangesAsync(cancellationToken);
+            return tag;
+        }
+
+        public async Task<Tag> GetTagByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<Tag>()
+                .Include(p => p.Posts)
+                .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
 
         public async Task<Category> GetCategoryBySlugAsync(string slug, CancellationToken cancellationToken = default)

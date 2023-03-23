@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace TatBlog.Core.Contracts
 {
-    public interface ICategoryQuery
+    public interface ITagQuery
     {
         public string Keyword { get; set; }
-        public bool ShowOnMenu { get; set; }
     }
 }
