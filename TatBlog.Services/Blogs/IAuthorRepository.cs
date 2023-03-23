@@ -21,9 +21,8 @@ namespace TatBlog.Services.Blogs
         Task<bool> DeleteAuthorByIdAsync(int id, CancellationToken cancellationToken = default);
 
         Task<IPagedList<AuthorItem>> GetPagedAuthorsAsync(IPagingParams pagingParams, CancellationToken cancellationToken = default);
-
+        Task<IPagedList<AuthorItem>> GetPagedAuthorsByQueryAsync(IAuthorQuery query, IPagingParams pagingParams, CancellationToken cancellationToken = default);
         IQueryable<AuthorItem> FilterAuthors(IAuthorQuery query);
-
         Task<Author> CreateOrUpdateAuthorAsync(Author author, CancellationToken cancellationToken = default);
     }
 }

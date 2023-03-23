@@ -69,8 +69,15 @@ namespace TatBlog.Data.Seeders
                 {
                     FullName ="Wil Smith",
                     UrlSlug ="wil-Smith",
-                    Email ="WilSmith@gmotip.com",
+                    Email ="Wilsmith@gmotip.com",
                     JoinedDate = new DateTime(2011, 7, 06)
+                },
+                 new()
+                {
+                    FullName ="Rock-William",
+                    UrlSlug ="Rock-William",
+                    Email ="Rockwilliam@gmotip.com",
+                    JoinedDate = new DateTime(2019, 8, 10)
                 }
 };
                 _dbContext.Authors.AddRange(authors);
@@ -218,7 +225,7 @@ namespace TatBlog.Data.Seeders
                 ViewCount = 19,
                 Category = categories[6],
                 Tags = new List<Tag>()
-                { tags[2] }
+                { tags[4] }
             },
               new()
             {

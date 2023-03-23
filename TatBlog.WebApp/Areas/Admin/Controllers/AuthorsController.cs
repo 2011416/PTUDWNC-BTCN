@@ -33,7 +33,6 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
-                SortColumn = "FullName"
             };
 
             // Sử dụng Mapster để tạo đối tượng PostQuery
@@ -42,7 +41,7 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
 
 
             ViewBag.AuthorsList = await _authorRepository
-                .GetPagedAuthorsAsync(pagingParams);
+                .GetPagedAuthorsByQueryAsync(authorQuery,pagingParams);
 
 
             return View(model);
@@ -86,6 +85,7 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
                 author = _mapper.Map<Author>(model);
 
                 author.Id = 0;
+                author.JoinedDate = DateTime.Now;
             }
             else
             {

@@ -361,7 +361,6 @@ namespace TatBlog.Services.Blogs
                     Id = x.Id,
                     FullName = x.FullName,
                     UrlSlug = x.UrlSlug,
-                    ImageUrl = x.ImageUrl,
                     Email = x.Email,
                     JoinedDate = x.JoinedDate,
                     PostCount = x.Posts.Count(p => p.Published),

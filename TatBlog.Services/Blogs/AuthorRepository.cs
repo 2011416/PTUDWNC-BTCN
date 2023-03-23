@@ -23,7 +23,8 @@ namespace TatBlog.Services.Blogs
         public async Task<Author> GetAuthorByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Author>()
-                .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+                .Include(p => p.Posts)
+                .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
 
 
@@ -51,7 +52,6 @@ namespace TatBlog.Services.Blogs
                     Id = x.Id,
                     FullName = x.FullName,
                     UrlSlug = x.UrlSlug,
-                    ImageUrl = x.ImageUrl,
                     JoinedDate = x.JoinedDate,
                     Email = x.Email,
                     Notes = x.Notes,
@@ -60,15 +60,19 @@ namespace TatBlog.Services.Blogs
                 .ToPagedListAsync(pagingParams, cancellationToken);
         }
 
+        public async Task<IPagedList<AuthorItem>> GetPagedAuthorsByQueryAsync(IAuthorQuery query, IPagingParams pagingParams, CancellationToken cancellationToken = default)
+        {
+            return await FilterAuthors(query).ToPagedListAsync(pagingParams, cancellationToken);
+        }
+
         public IQueryable<AuthorItem> FilterAuthors(IAuthorQuery query)
         {
-            IQueryable<AuthorItem> authorQuery = _context.Set<Author>()
+            IQueryable<AuthorItem> author = _context.Set<Author>()
                 .Select(x => new AuthorItem()
                 {
                     Id = x.Id,
                     FullName = x.FullName,
                     UrlSlug = x.UrlSlug,
-                    ImageUrl = x.ImageUrl,
                     JoinedDate = x.JoinedDate,
                     Email = x.Email,
                     Notes = x.Notes,
@@ -77,20 +81,20 @@ namespace TatBlog.Services.Blogs
 
             if (!string.IsNullOrWhiteSpace(query.Keyword))
             {
-                authorQuery = authorQuery.Where(x => x.FullName.Contains(query.Keyword) ||
+                author = author.Where(x => x.FullName.Contains(query.Keyword) ||
                                                     x.Notes.Contains(query.Keyword) ||
                                                     x.Email.Contains(query.Keyword));
             }
             if (query.Month != null)
             {
-                authorQuery = authorQuery.Where(x => x.JoinedDate.Month == query.Month);
+                author = author.Where(x => x.JoinedDate.Month == query.Month);
             }
             if (query.Year != null)
             {
-                authorQuery = authorQuery.Where(x => x.JoinedDate.Year == query.Year);
+                author = author.Where(x => x.JoinedDate.Year == query.Year);
             }
 
-            return authorQuery;
+            return author;
         }
 
  
