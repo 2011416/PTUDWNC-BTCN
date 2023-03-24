@@ -14,7 +14,7 @@ namespace TatBlog.WebApp.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var author = await _blogRepository.GetAuthorAsync(4);
+            var author = await _blogRepository.GetAuthorsAsync(4);
 
             return View(author);
         }

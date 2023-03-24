@@ -351,22 +351,11 @@ namespace TatBlog.Services.Blogs
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<IList<AuthorItem>> GetAuthorAsync(int numAuthor, CancellationToken cancellationToken = default)
+        public async Task<IList<Author>> GetAuthorsAsync(int numAuthors, CancellationToken cancellationToken = default)
         {
-            IQueryable<Author> author = _context.Set<Author>();
-            return await author
-                .OrderBy(x => x.FullName)
-                .Select(x => new AuthorItem
-                {
-                    Id = x.Id,
-                    FullName = x.FullName,
-                    UrlSlug = x.UrlSlug,
-                    Email = x.Email,
-                    JoinedDate = x.JoinedDate,
-                    PostCount = x.Posts.Count(p => p.Published),
-                })
-                .OrderByDescending(s => s.PostCount)
-                .Take(numAuthor)
+            return await _context.Set<Author>()
+                .OrderByDescending(x => x.Posts.Count)
+                .Take(numAuthors)
                 .ToListAsync(cancellationToken);
         }
 
