@@ -22,5 +22,12 @@
     @await Component.InvokeAsync("ArchivesWidget")
 
     <!-- Đăng ký nhận tin mới -->
+    <button class="btn btn-default btn-outline-dark ">
+        <a asp-controller="Newsletter"
+           asp-action="Subscribe"
+           class="text-uppercase fw-bold text-decoration-none text-black">
+            Đăng ký NewsLetter
+        </a>
+    </button>
 </div>
 
