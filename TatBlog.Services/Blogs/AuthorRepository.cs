@@ -60,43 +60,6 @@ namespace TatBlog.Services.Blogs
                 .ToPagedListAsync(pagingParams, cancellationToken);
         }
 
-        public async Task<IPagedList<AuthorItem>> GetPagedAuthorsByQueryAsync(IAuthorQuery query, IPagingParams pagingParams, CancellationToken cancellationToken = default)
-        {
-            return await FilterAuthors(query).ToPagedListAsync(pagingParams, cancellationToken);
-        }
-
-        public IQueryable<AuthorItem> FilterAuthors(IAuthorQuery query)
-        {
-            IQueryable<AuthorItem> author = _context.Set<Author>()
-                .Select(x => new AuthorItem()
-                {
-                    Id = x.Id,
-                    FullName = x.FullName,
-                    UrlSlug = x.UrlSlug,
-                    JoinedDate = x.JoinedDate,
-                    Email = x.Email,
-                    Notes = x.Notes,
-                    PostCount = x.Posts.Count(p => p.Published)
-                });
-
-            if (!string.IsNullOrWhiteSpace(query.Keyword))
-            {
-                author = author.Where(x => x.FullName.Contains(query.Keyword) ||
-                                                    x.Notes.Contains(query.Keyword) ||
-                                                    x.Email.Contains(query.Keyword));
-            }
-            if (query.Month != null)
-            {
-                author = author.Where(x => x.JoinedDate.Month == query.Month);
-            }
-            if (query.Year != null)
-            {
-                author = author.Where(x => x.JoinedDate.Year == query.Year);
-            }
-
-            return author;
-        }
-
  
         public async Task<Author> CreateOrUpdateAuthorAsync(Author author, CancellationToken cancellationToken = default)
         {

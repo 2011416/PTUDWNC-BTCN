@@ -41,7 +41,7 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
 
 
             ViewBag.AuthorsList = await _authorRepository
-                .GetPagedAuthorsByQueryAsync(authorQuery,pagingParams);
+                .GetPagedAuthorsAsync(pagingParams);
 
 
             return View(model);
