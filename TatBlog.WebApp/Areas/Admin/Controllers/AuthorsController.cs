@@ -94,7 +94,7 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
             }
 
 
-            await _authorRepository.CreateOrUpdateAuthorAsync(author);
+            await _authorRepository.AddOrUpdateAsync(author);
 
             return RedirectToAction(nameof(Index));
 
@@ -103,7 +103,7 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers
 
         public async Task<IActionResult> DeleteAuthor(int id)
         {
-            await _authorRepository.DeleteAuthorByIdAsync(id);
+            await _authorRepository.DeleteAuthorAsync(id);
 
             return RedirectToAction("Index");
         }
