@@ -5,81 +5,50 @@ using TatBlog.Data.Contexts;
 using TatBlog.Data.Seeders;
 using TatBlog.Services.Blogs;
 using TatBlog.Services.Media;
+using TatBlog.Services.Timing;
 
 namespace TatBlog.WebApp.Extensions
 {
     public static class WebApplicationExtensions
     {
-        public static WebApplicationBuilder ConfigureMvc(this WebApplicationBuilder builder)
+        public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
         {
-            builder.Services.AddControllersWithViews();
-            builder.Services.AddResponseCompression();
+            builder.Services.AddMemoryCache();
+
+            builder.Services.AddDbContext<BlogDbContext>(options =>
+            options.UseSqlServer(
+                builder.Configuration
+                .GetConnectionString("DefaultConnection")));
+
+            builder.Services
+                .AddScoped<ITimeProvider, LocalTimeProvider>();
+            builder.Services
+                .AddScoped<IMediaManager, LocalFileSystemMediaManager>();
+            builder.Services
+                .AddScoped<IBlogRepository, BlogRepository>();
+            builder.Services
+                .AddScoped<IAuthorRepository, AuthorRepository>();
 
             return builder;
         }
 
-        public static WebApplicationBuilder ConfigureServices(
+        public static WebApplicationBuilder ConfigureCors(
             this WebApplicationBuilder builder)
         {
-            builder.Services.AddDbContext<BlogDbContext>(options =>
-                options.UseSqlServer(
-                    builder.Configuration
-                        .GetConnectionString("DefaultConnection")));
-
-            builder.Services.AddScoped<IMediaManager, LocalFileSystemMediaManager>();
-            builder.Services.AddScoped<IBlogRepository, BlogRepository>();
-            builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
-            builder.Services.AddScoped<IDataSeeder, DataSeeder>();
+            builder.Services.AddCors(options => 
+            {
+                options.AddPolicy("TatBlogApp", policyBuilder => 
+                policyBuilder
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
+            });
 
             return builder;
         }
 
-        public static WebApplication UseRequestPipeLine(
-            this WebApplication app)
-        {
-            if (app.Environment.IsDevelopment())
-                app.UseDeveloperExceptionPage();
-            else
-            {
-                app.UseExceptionHandler("/Blog/Error");
-
-                app.UseHsts();
-            }
-
-            app.UseResponseCompression();
-
-            app.UseHttpsRedirection();
-
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
-
-            return app;
-        }
-
-        public static IApplicationBuilder UseDataSeeder(
-            this IApplicationBuilder app)
-        {
-            using var scope = app.ApplicationServices.CreateScope();
-
-            try
-            {
-                scope.ServiceProvider
-                    .GetRequiredService<IDataSeeder>()
-                    .Initialize();
-            }
-            catch (Exception ex)
-            {
-                scope.ServiceProvider
-                    .GetRequiredService<ILogger<Program>>()
-                    .LogError(ex, "Could not insert data into database");
-            }
-
-            return app;
-        }
-
-        public static WebApplicationBuilder ConfigureNLog(this WebApplicationBuilder builder)
+        public static WebApplicationBuilder ConfigureNLog(
+            this WebApplicationBuilder builder)
         {
             builder.Logging.ClearProviders();
             builder.Host.UseNLog();
@@ -87,7 +56,30 @@ namespace TatBlog.WebApp.Extensions
             return builder;
         }
 
+        public static WebApplicationBuilder ConfigureSwaggerOpenApi(
+            this WebApplicationBuilder builder)
+        {
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
+            return builder;
+        }
+
+        public static WebApplication SetupRequestPipeLine(
+            this WebApplication app)
+        {
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+            app.UseStaticFiles();
+            app.UseHttpsRedirection();
+
+            app.UseCors("TatBlogApp");
+
+            return app;
+        }
     }
 }
-
-

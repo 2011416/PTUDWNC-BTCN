@@ -59,9 +59,6 @@ namespace TatBlog.Services.Blogs
 
         Task<bool> DeleteCategoryByIdAsync(int id, CancellationToken cancellationToken = default);
 
-        Task<IList<Author>> GetAuthorsAsync(CancellationToken cancellationToken = default);
-        Task<IList<Author>> GetAuthorsAsync(int numAuthors, CancellationToken cancellationToken = default);
-
         Task<IPagedList<Post>> GetPagedPostsAsync(PostQuery condition, int pageNumber = 1, int pageSize = 10, CancellationToken cancellationToken = default);
 
         Task<IPagedList<T>> GetPagedPostsAsync<T>(PostQuery condition, IPagingParams pagingParams, Func<IQueryable<Post>, IQueryable<T>> mapper);
