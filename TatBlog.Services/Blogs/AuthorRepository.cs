@@ -167,41 +167,4 @@ public class AuthorRepository : IAuthorRepository
 				cancellationToken) > 0;
 	}
 
-    public async Task<IPagedList<AuthorItem>> GetPagedAuthorsByQueryAsync(IAuthorQuery query, IPagingParams pagingParams, CancellationToken cancellationToken = default)
-    {
-        return await FilterAuthors(query).ToPagedListAsync(pagingParams, cancellationToken);
-    }
-
-    public IQueryable<AuthorItem> FilterAuthors(IAuthorQuery query)
-    {
-        IQueryable<AuthorItem> authorQuery = _context.Set<Author>()
-            .Select(x => new AuthorItem()
-            {
-                Id = x.Id,
-                FullName = x.FullName,
-                UrlSlug = x.UrlSlug,
-                ImageUrl = x.ImageUrl,
-                JoinedDate = x.JoinedDate,
-                Email = x.Email,
-                Notes = x.Notes,
-                PostCount = x.Posts.Count(p => p.Published)
-            });
-
-        if (!string.IsNullOrWhiteSpace(query.Keyword))
-        {
-            authorQuery = authorQuery.Where(x => x.FullName.Contains(query.Keyword) ||
-                                                x.Notes.Contains(query.Keyword) ||
-                                                x.Email.Contains(query.Keyword));
-        }
-        if (query.Month != null)
-        {
-            authorQuery = authorQuery.Where(x => x.JoinedDate.Month == query.Month);
-        }
-        if (query.Year != null)
-        {
-            authorQuery = authorQuery.Where(x => x.JoinedDate.Year == query.Year);
-        }
-
-        return authorQuery;
-    }
 }

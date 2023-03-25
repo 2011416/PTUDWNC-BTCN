@@ -62,11 +62,11 @@ namespace TatBlog.WebApi.Endpoints
                 AuthorId = id,
                 Published = true
             };
-            var posts = await blogRepository.GetPagedPostsAsync(
+            var postsList = await blogRepository.GetPagedPostsAsync(
                 postQuery, pagingModel,
                 posts => posts.ProjectToType<PostDto>());
 
-            var paginationResult = new PaginationResult<PostDto>(posts);
+            var paginationResult = new PaginationResult<PostDto>(postsList);
 
             return Results.Ok(paginationResult);
         }
@@ -82,10 +82,10 @@ namespace TatBlog.WebApi.Endpoints
                 Published = true
             };
 
-            var posts = await blogRepository.GetPagedPostsAsync(
+            var postsLists = await blogRepository.GetPagedPostsAsync(
                 postQuery, pagingModel,
                 posts => posts.ProjectToType<PostDto>());
-            var paginationResult = new PaginationResult<PostDto>(posts);
+            var paginationResult = new PaginationResult<PostDto>(postsLists);
 
             return Results.Ok(paginationResult);
         }

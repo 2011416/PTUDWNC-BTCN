@@ -47,6 +47,4 @@ public interface IAuthorRepository
 		int authorId, string imageUrl,
 		CancellationToken cancellationToken = default);
 
-	Task<IPagedList<AuthorItem>> GetPagedAuthorsByQueryAsync(IAuthorQuery query, IPagingParams pagingParams, CancellationToken cancellationToken = default);
-	IQueryable<AuthorItem> FilterAuthors(IAuthorQuery query);
 }
