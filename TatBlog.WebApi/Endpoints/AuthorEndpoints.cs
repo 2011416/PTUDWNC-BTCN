@@ -10,6 +10,7 @@ using TatBlog.Core.Entities;
 using TatBlog.Services.Blogs;
 using TatBlog.Services.Media;
 using TatBlog.WebApi.Extensions;
+using TatBlog.WebApi.Filters;
 using TatBlog.WebApi.Models;
 
 namespace TatBlog.WebApi.Endpoints
@@ -25,8 +26,46 @@ namespace TatBlog.WebApi.Endpoints
                 .WithName("GetAuthors")
                 .Produces<PaginationResult<AuthorItem>>();
 
+            routeGroupBuilder.MapGet("/{id:int}", GetAuthorDetails)
+               .WithName("GetAuthorById")
+               .Produces<AuthorItem>()
+               .Produces(404);
+
+            routeGroupBuilder.MapGet(
+                "/{slug:regex(^[a-z0-9_-]+$)}/posts", 
+                GetPostsByAuthorSlug)
+                .WithName("GetPostsByAuthorSlug")
+                .Produces<PaginationResult<PostDto>>();
+
+            routeGroupBuilder.MapPost("/", AddAuthor)
+                .WithName("AddNewAuthor")
+                .AddEndpointFilter<ValidatorFilter<AuthorEditModel>>()
+                .Produces(201)
+                .Produces(400)
+                .Produces(409);
+
+            routeGroupBuilder.MapPost("/{id:int}/avatar", SetAuthorPicture)
+                .WithName("SetAuthorPicture")
+                .Accepts<IFormFile>("multipart/form-data")
+                .Produces<string>()
+                .Produces(400);
+
+            routeGroupBuilder.MapPut("/{id:int}", UpdateAuthor)
+                .WithName("UpdateAnAuthor")
+                .AddEndpointFilter<ValidatorFilter<AuthorEditModel>>()
+                .Produces(204)
+                .Produces(400)
+                .Produces(409);
+
+            routeGroupBuilder.MapDelete("/{id:int}", DeleteAuthor)
+                .WithName("DeleteAnAuthor")
+                .Produces(204)
+                .Produces(404);
+
             return app;
         }
+
+
 
         private static async Task<IResult> GetAuthors(
             [AsParameters] AuthorFilterModel model,
@@ -96,14 +135,7 @@ namespace TatBlog.WebApi.Endpoints
             IAuthorRepository authorRepository, 
             IMapper mapper)
         {
-            var validationResult = await validator.ValidateAsync(model);
-
-            if (!validationResult.IsValid)
-            {
-                return Results.BadRequest(
-                    validationResult.Errors.ToResponse());
-            }
-
+            
             if (await authorRepository
                     .IsAuthorSlugExistedAsync(0, model.UrlSlug))
 
@@ -146,14 +178,7 @@ namespace TatBlog.WebApi.Endpoints
             IAuthorRepository authorRepository, 
             IMapper mapper)
         {
-            var validationResult = await validator.ValidateAsync(model);
             
-            if (!validationResult.IsValid)
-            {
-                return Results.BadRequest(
-                    validationResult.Errors.ToResponse());
-            }
-
             if (await authorRepository
                     .IsAuthorSlugExistedAsync(id, model.UrlSlug))
             {
