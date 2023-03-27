@@ -80,22 +80,33 @@ public class AuthorRepository : IAuthorRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<IPagedList<AuthorItem>> GetPagedAuthorsAsync(IPagingParams pagingParams, CancellationToken cancellationToken = default)
+
+    public async Task<IPagedList<AuthorItem>> GetPagedAuthorsAsync(
+       IPagingParams pagingParams,
+       string name = null,
+       CancellationToken cancellationToken = default)
     {
-        return await _context.Set<Author>()
-            .Include(p => p.Posts)
-            .Select(x => new AuthorItem()
-            {
-                Id = x.Id,
-                FullName = x.FullName,
-                UrlSlug = x.UrlSlug,
-                JoinedDate = x.JoinedDate,
-                Email = x.Email,
-                Notes = x.Notes,
-                PostCount = x.Posts.Count(p => p.Published)
-            })
+        var authorQuery = _context.Set<Author>()
+            .AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            authorQuery = authorQuery.Where(x => x.FullName.Contains(name));
+        }
+
+        return await authorQuery.Select(a => new AuthorItem()
+        {
+            Id = a.Id,
+            FullName = a.FullName,
+            Email = a.Email,
+            JoinedDate = a.JoinedDate,
+            ImageUrl = a.ImageUrl,
+            UrlSlug = a.UrlSlug,
+            PostCount = a.Posts.Count(p => p.Published)
+        })
             .ToPagedListAsync(pagingParams, cancellationToken);
     }
+
 
     public async Task<IPagedList<T>> GetPagedAuthorsAsync<T>(
 		Func<IQueryable<Author>, IQueryable<T>> mapper,
