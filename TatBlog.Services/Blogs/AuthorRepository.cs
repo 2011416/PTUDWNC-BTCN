@@ -72,6 +72,14 @@ public class AuthorRepository : IAuthorRepository
 			.ToListAsync(cancellationToken);
 	}
 
+    public async Task<IList<Author>> GetAuthorsAsync(int numAuthors, CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<Author>()
+            .OrderByDescending(x => x.Posts.Count)
+            .Take(numAuthors)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<IPagedList<AuthorItem>> GetPagedAuthorsAsync(IPagingParams pagingParams, CancellationToken cancellationToken = default)
     {
         return await _context.Set<Author>()

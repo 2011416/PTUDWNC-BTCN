@@ -20,7 +20,10 @@ public interface IAuthorRepository
 	Task<IList<AuthorItem>> GetAuthorsAsync(
 		CancellationToken cancellationToken = default);
 
-	Task<IPagedList<AuthorItem>> GetPagedAuthorsAsync(IPagingParams pagingParams, CancellationToken cancellationToken = default);
+	Task<IList<Author>> GetAuthorsAsync(int numAuthors, CancellationToken cancellationToken = default);
+
+
+    Task<IPagedList<AuthorItem>> GetPagedAuthorsAsync(IPagingParams pagingParams, CancellationToken cancellationToken = default);
 
 
     Task<IPagedList<T>> GetPagedAuthorsAsync<T>(

@@ -345,20 +345,6 @@ namespace TatBlog.Services.Blogs
                 .ExecuteDeleteAsync(cancellationToken) > 0;
         }
 
-        public async Task<IList<Author>> GetAuthorsAsync(CancellationToken cancellationToken = default)
-        {
-            return await _context.Set<Author>()
-                .ToListAsync(cancellationToken);
-        }
-
-        public async Task<IList<Author>> GetAuthorsAsync(int numAuthors, CancellationToken cancellationToken = default)
-        {
-            return await _context.Set<Author>()
-                .OrderByDescending(x => x.Posts.Count)
-                .Take(numAuthors)
-                .ToListAsync(cancellationToken);
-        }
-
         public async Task<IList<MonthPostCount>> CountMonthPostsAsync(
         int numMonths, CancellationToken cancellationToken = default)
         {
