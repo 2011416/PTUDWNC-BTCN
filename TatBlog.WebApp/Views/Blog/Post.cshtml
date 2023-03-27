@@ -67,6 +67,27 @@
                            asp-route-slug="@Model.UrlSlug">
                         </a>
                     </div>
+                    <div class="mt-3">
+                        <h3>Bình luận </h3>
+                        <form asp-area="Admin"
+                              asp-controller="Blog"
+                              asp-action="Comment"
+                              method="get"
+                              class="row gy-4 gx-6 align-items-center">
+
+                            <div class="col-auto">
+                                <label class="visually-hidden" asp-controller="Blog"
+                                       asp-action="Comment"></label>
+                                <input type="text"
+                                       class="form-control"
+                                       asp-controller="Blog"
+                                       asp-action="Comment"
+                                       placeholder="Nhập bình luận..." />
+                            </div>
+                        </form>
+                        
+                    </div>
+
                 </div>
             </div>
         </div>

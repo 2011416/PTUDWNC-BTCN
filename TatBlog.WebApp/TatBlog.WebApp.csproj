@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Blog\Comment.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TatBlog.Core\TatBlog.Core.csproj" />
     <ProjectReference Include="..\TatBlog.Data\TatBlog.Data.csproj" />
     <ProjectReference Include="..\TatBlog.Services\TatBlog.Services.csproj" />
@@ -54,6 +58,15 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\Tags\Edit.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Blog\Comment.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Blog\Comment.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Blog\Comment.cshtml" />
   </ItemGroup>
 
 </Project>
