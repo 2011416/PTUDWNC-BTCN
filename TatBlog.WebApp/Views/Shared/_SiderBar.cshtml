@@ -22,6 +22,23 @@
     @await Component.InvokeAsync("ArchivesWidget")
 
     <!-- Đăng ký nhận tin mới -->
+    <form asp-area="Admin"
+      asp-controller="Posts"
+      asp-action="Index"
+      method="get"
+      class="row gy-2 gx-3 align-items-center">
+
+    <div class="col-auto">
+            <label class="visually-hidden" asp-controller="Newsletter"
+                   asp-action="Subscribe"></label>
+        <input type="text"
+               class="form-control"
+                   asp-controller="Newsletter"
+                   asp-action="Subscribe"
+               placeholder="Nhập Email..." />
+    </div>
+    </form>
+
     <button class="btn btn-default btn-outline-dark ">
         <a asp-controller="Newsletter"
            asp-action="Subscribe"
