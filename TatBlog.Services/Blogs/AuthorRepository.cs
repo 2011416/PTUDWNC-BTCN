@@ -80,10 +80,11 @@ public class AuthorRepository : IAuthorRepository
             .ToListAsync(cancellationToken);
     }
 
+
     public async Task<IPagedList<AuthorItem>> GetPagedAuthorsAsync(
-        IPagingParams pagingParams,
-        string name = null,
-        CancellationToken cancellationToken = default)
+       IPagingParams pagingParams,
+       string name = null,
+       CancellationToken cancellationToken = default)
     {
         var authorQuery = _context.Set<Author>()
             .AsNoTracking();
@@ -105,6 +106,7 @@ public class AuthorRepository : IAuthorRepository
         })
             .ToPagedListAsync(pagingParams, cancellationToken);
     }
+
 
     public async Task<IPagedList<T>> GetPagedAuthorsAsync<T>(
         Func<IQueryable<Author>, IQueryable<T>> mapper,
@@ -156,14 +158,14 @@ public class AuthorRepository : IAuthorRepository
             .AnyAsync(x => x.Id != authorId && x.UrlSlug == slug, cancellationToken);
     }
 
-    public async Task<bool> SetImageUrlAsync(
-        int authorId, string imageUrl,
-        CancellationToken cancellationToken = default)
-    {
-        return await _context.Authors
-            .Where(x => x.Id == authorId)
-            .ExecuteUpdateAsync(x =>
-                x.SetProperty(a => a.ImageUrl, a => imageUrl),
-                cancellationToken) > 0;
-    }
+	public async Task<bool> SetImageUrlAsync(
+		int authorId, string imageUrl,
+		CancellationToken cancellationToken = default)
+	{
+		return await _context.Authors
+			.Where(x => x.Id == authorId)
+			.ExecuteUpdateAsync(x => 
+				x.SetProperty(a => a.ImageUrl, a => imageUrl), 
+				cancellationToken) > 0;
+	}
 }
