@@ -60,7 +60,7 @@ namespace TatBlog.WebApi.Endpoints
        [AsParameters] CategoryFilterModel model,
        IBlogRepository blogRepository)
         {
-            var categoryList = await blogRepository.GetPagedCategoriesAsync(model, model.Name);
+            var categoryList = await blogRepository.GetPagedCategoriesAsync(model);
 
             var paginationResult = new PaginationResult<CategoryItem>(categoryList);
 

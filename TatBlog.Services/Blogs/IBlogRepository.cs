@@ -54,7 +54,7 @@ namespace TatBlog.Services.Blogs
 
         Task<bool> IsCategorySlugExistedAsync(string slug, CancellationToken cancellationToken = default);
 
-        Task<IPagedList<CategoryItem>> GetPagedCategoriesAsync(IPagingParams pagingParams, string name = null, CancellationToken cancellationToken = default);
+        Task<IPagedList<CategoryItem>> GetPagedCategoriesAsync(IPagingParams pagingParams, CancellationToken cancellationToken = default);
         Task<Category> CreateOrUpdateCategoryAsync(Category category,CancellationToken cancellationToken = default);
         Task<bool> DeleteCategoryByIdAsync(int id, CancellationToken cancellationToken = default);
 

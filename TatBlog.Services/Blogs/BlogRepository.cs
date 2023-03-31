@@ -306,7 +306,7 @@ namespace TatBlog.Services.Blogs
                 .AnyAsync(x => x.UrlSlug.CompareTo(slug) == 0, cancellationToken);
         }
 
-        public async Task<IPagedList<CategoryItem>> GetPagedCategoriesAsync(IPagingParams pagingParams, string name = null, CancellationToken cancellationToken = default)
+        public async Task<IPagedList<CategoryItem>> GetPagedCategoriesAsync(IPagingParams pagingParams, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Category>()
                 .Select(x => new CategoryItem()
