@@ -162,7 +162,6 @@ namespace TatBlog.WebApi.Endpoints
                 mapper.Map<AuthorItem>(author), HttpStatusCode.Created));
         }
 
-
         private static async Task<IResult> SetAuthorPicture(
             int id, IFormFile imageFile, 
             IAuthorRepository authorRepository, 

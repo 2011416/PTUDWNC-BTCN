@@ -15,8 +15,8 @@ namespace TatBlog.WebApi.Endpoints
 {
     public static class CategoryEndpoints
     {
-        public static WebApplication MapCategoryEndpoints (
-            this WebApplication app) 
+        public static WebApplication MapCategoryEndpoints(
+            this WebApplication app)
         {
             var routeGroupBuilder = app.MapGroup("/api/categories");
 
@@ -28,11 +28,25 @@ namespace TatBlog.WebApi.Endpoints
             routeGroupBuilder.MapGet("/{id:int}", GetCategoryById)
                 .WithName("GetCategoryById")
                 .Produces<ApiResponse<CategoryItem>>();
-            
+
 
             routeGroupBuilder.MapGet("/{slug:regex(^[a-z0-9_-]+$)}/posts", GetPostsByCategorySlug)
                 .WithName("GetPostsByCategorySlug")
                 .Produces<ApiResponse<PaginationResult<PostDto>>>();
+
+            routeGroupBuilder.MapPost("/", AddCategory)
+                .WithName("AddCategory")
+                .RequireAuthorization()
+                .Produces(401)
+                .Produces<ApiResponse<string>>();
+
+
+            routeGroupBuilder.MapPut("/{id:guid}", UpdateCategory)
+                .WithName("UpdateCategory")
+                .RequireAuthorization()
+                .Produces(401)
+                .Produces<ApiResponse<string>>();
+
 
             routeGroupBuilder.MapDelete("/{id:int}", DeleteCategory)
                 .WithName("DeleteCategory")
@@ -83,6 +97,43 @@ namespace TatBlog.WebApi.Endpoints
             return Results.Ok(ApiResponse.Success(paginationResult));
         }
 
+        private static async Task<IResult> AddCategory(
+            CategoryEditModel model,
+            IBlogRepository blogRepository,
+            IMapper mapper)
+        {
+            if (await blogRepository.IsCategorySlugExistedAsync(model.UrlSlug))
+            {
+                return Results.Ok(ApiResponse.Fail(
+                    HttpStatusCode.NotFound, $"Slug {model.UrlSlug} đã được sử dụng"));
+            }
+
+            var category = mapper.Map<Category>(model);
+
+            await blogRepository.CreateOrUpdateCategoryAsync(category);
+
+            return Results.Ok(ApiResponse.Success(mapper.Map<CategoryItem>(category), HttpStatusCode.Created));
+        }
+
+        private static async Task<IResult> UpdateCategory(
+            CategoryEditModel model,
+            IBlogRepository blogRepository,
+            IMapper mapper)
+        {
+            if (await blogRepository.IsCategorySlugExistedAsync(model.UrlSlug))
+            {
+                return Results.Ok(ApiResponse.Fail(
+                    HttpStatusCode.NotFound, $"Slug {model.UrlSlug} đã được sử dụng"));
+            }
+
+            var category = mapper.Map<Category>(model);
+
+
+            return await blogRepository.CreateOrUpdateCategoryAsync(category) != null
+                ? Results.Ok(ApiResponse.Success("Category is updated", HttpStatusCode.NoContent))
+                : Results.Ok(ApiResponse.Fail(HttpStatusCode.NotFound));
+        }
+
         private static async Task<IResult> DeleteCategory(int id, IBlogRepository blogRepository)
         {
             return await blogRepository.DeleteCategoryByIdAsync(id)
@@ -92,6 +143,6 @@ namespace TatBlog.WebApi.Endpoints
                 $"Không thể tìm thấy chủ đề có mã số {id}"));
         }
 
-       
+
     }
 }
