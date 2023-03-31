@@ -338,6 +338,7 @@ namespace TatBlog.Services.Blogs
             return category;
         }
 
+
         public async Task<bool> DeleteCategoryByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _context.Set<Category>()
