@@ -1,5 +1,6 @@
 ﻿using MapsterMapper;
 using System.Net;
+using TatBlog.Core.Collections;
 using TatBlog.Core.DTO;
 using TatBlog.Services.Blogs;
 using TatBlog.WebApi.Models;
@@ -12,16 +13,30 @@ namespace TatBlog.WebApi.Endpoints
         {
             var routeGroupBuilder = app.MapGroup("/api/tags");
 
+            routeGroupBuilder.MapGet("/", GetTag)
+               .WithName("GetTag")
+               .Produces<ApiResponse<PaginationResult<TagItem>>>();
+
             routeGroupBuilder.MapGet("/{id:int}", GetTagById)
                .WithName("GetTagById")
                .Produces<ApiResponse<TagItem>>();
 
             routeGroupBuilder.MapDelete("/{id:int}", DeleteTag)
-                .WithName("DeleteTag")
-                .Produces(401)
-                .Produces<ApiResponse<string>>();
+               .WithName("DeleteTag")
+               .Produces(401)
+               .Produces<ApiResponse<string>>();
 
             return app;
+        }
+
+        private static async Task<IResult> GetTag(
+      [AsParameters] TagFilterModel model,
+      IBlogRepository blogRepository)
+        {
+            var tagList = await blogRepository.GetPagedTagsAsync(model);
+            var paginationResult = new PaginationResult<TagItem>(tagList);
+
+            return Results.Ok(ApiResponse.Success(paginationResult));
         }
 
         private static async Task<IResult> GetTagById(int id, IBlogRepository blogRepository, IMapper mapper)
