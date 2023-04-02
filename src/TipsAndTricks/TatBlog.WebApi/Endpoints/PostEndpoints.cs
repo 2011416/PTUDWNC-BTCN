@@ -15,9 +15,13 @@ namespace TatBlog.WebApi.Endpoints
         {
             var routeGroupBuilder = app.MapGroup("/api/posts");
 
+            routeGroupBuilder.MapGet("/", GetPost)
+               .WithName("GetPosts")
+               .Produces<ApiResponse<PaginationResult<PostDto>>>();
+
             routeGroupBuilder.MapGet("/{id:int}", GetPostById)
-            .WithName("GetPostById")
-            .Produces<ApiResponse<PostDetail>>();
+                .WithName("GetPostById")
+                .Produces<ApiResponse<PostDetail>>();
 
             routeGroupBuilder.MapGet("/random/{limit:int}", GetRandomPosts)
                 .WithName("GetRandomPosts")
@@ -33,6 +37,19 @@ namespace TatBlog.WebApi.Endpoints
                .Produces<ApiResponse<string>>();
 
             return app;
+        }
+
+        private static async Task<IResult> GetPost(
+       [AsParameters] PostFilterModel model,
+       IBlogRepository blogRepository,
+       IMapper mapper)
+        {
+            var postsQuery = mapper.Map<PostQuery>(model);
+
+            var postList = await blogRepository.GetPagedPostsAsync(postsQuery,model, p => p.ProjectToType<PostDto>());
+
+            var paginationResult = new PaginationResult<PostDto>(postList);
+            return Results.Ok(ApiResponse.Success(paginationResult));
         }
 
         private static async Task<IResult> GetPostById(int id, IBlogRepository blogRepository, IMapper mapper)
