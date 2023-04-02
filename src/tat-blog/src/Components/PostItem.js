@@ -7,7 +7,7 @@ const PostList = ({ postItem }) => {
 
     let imageUrl = isEmptyOrSpaces(postItem.imageUrl) 
     ? process.env.PUBLIC_URL + '/images/image1.jpg' 
-    : '${postItem.imageUrl}';
+    : `${postItem.imageUrl}`;
 
     let postedDate = new Date(postItem.postedDate);
 
@@ -20,7 +20,7 @@ const PostList = ({ postItem }) => {
                     </div>
                     <div className='col-md-8'>
                         <Card.Body>
-                            <Card.title>{postItem}</Card.title>
+                            <Card.Title>{postItem.title}</Card.Title>
                             <Card.Text>
                                 <small className='text-muted'>Tác giả:</small>
                                 <span className='text-primary m-1'>
@@ -39,7 +39,7 @@ const PostList = ({ postItem }) => {
                             </div>
                             <div className='text-end'>
                             <Link 
-                            to={'/blog/post?year=${postedDate.getFullYear()} &month=${postedDate.getMonth()} &day=${postedDate.getDay()} &slug=${postItem.urlSlug}'}
+                           to={`/blog/post?year=${postedDate.getFullYear()}&month=${postedDate.getMonth()}&day=${postedDate.getDay()}&slug=${postItem.urlSlug}`}
                             className='btn btn-primary'
                             title={postItem.title}>
                                 Xem chi tiết
