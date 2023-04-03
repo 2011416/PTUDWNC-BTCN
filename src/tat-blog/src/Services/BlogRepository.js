@@ -11,7 +11,7 @@ export async function getPosts (keyword = '',pageSize = 10, pageNumber = 1, sort
         else 
             return null;
     } catch (error) {
-        console.log('Error ', error.message);
+        console.log('Error', error.message);
         return null;
     }
 }
