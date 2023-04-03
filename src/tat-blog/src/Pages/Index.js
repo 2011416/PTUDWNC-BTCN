@@ -20,9 +20,9 @@ const Index = () => {
     if (postList.length > 0)
     return (
         <div className='p-4'>
-            {postList.map(item => {
+            {postList.map((item, index) => {
                 return (
-                    <PostItem postItem={item} />
+                    <PostItem postItem={item} key={index} />
                 );
             })};
         </div>
