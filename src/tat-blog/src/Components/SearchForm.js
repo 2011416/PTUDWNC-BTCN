@@ -9,7 +9,7 @@ const SearchForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        window.location = `/blog?k=${Keyword}}`;
+        window.location = `/blog?k=${Keyword}`;
 };
 
 return (
