@@ -23,11 +23,11 @@ namespace TatBlog.WebApi.Endpoints
                 .WithName("GetPostById")
                 .Produces<ApiResponse<PostDetail>>();
 
-            routeGroupBuilder.MapGet("/random/{limit:int}", GetRandomPosts)
+            routeGroupBuilder.MapGet("/random/{number:int}", GetRandomPosts)
                 .WithName("GetRandomPosts")
                 .Produces<ApiResponse<IList<PostDto>>>();
 
-            routeGroupBuilder.MapGet("/archive/{limit:int}", GetArchivePosts)
+            routeGroupBuilder.MapGet("/archive/{number:int}", GetArchivePosts)
               .WithName("GetArchivePosts")
               .Produces<ApiResponse<IList<MonthPostCount>>>();
 
