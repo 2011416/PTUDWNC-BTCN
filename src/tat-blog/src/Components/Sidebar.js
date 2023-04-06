@@ -1,6 +1,7 @@
 import React from "react";
 import SearchForm from "./SearchForm";
 import CategoriesWidget from "./CategoriesWidget";
+import RandomPostsWidget from "./RandomPostsWidget";
 
 
 const Sidebar = () => {
@@ -8,7 +9,9 @@ const Sidebar = () => {
         <div className='pt-4 ps-2'>
            <SearchForm />
 
-           <CategoriesWidget />         
+           <CategoriesWidget />    
+
+           <RandomPostsWidget />        
             <h1>
                 Bài viết nổi bật
             </h1>
