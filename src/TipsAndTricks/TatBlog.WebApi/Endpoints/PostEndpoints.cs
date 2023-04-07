@@ -15,15 +15,23 @@ namespace TatBlog.WebApi.Endpoints
         {
             var routeGroupBuilder = app.MapGroup("/api/posts");
 
-            routeGroupBuilder.MapGet("/{id:int}", GetPostById)
-            .WithName("GetPostById")
-            .Produces<ApiResponse<PostDetail>>();
+            routeGroupBuilder.MapGet("/", GetPost)
+               .WithName("GetPosts")
+               .Produces<ApiResponse<PaginationResult<PostDto>>>();
 
-            routeGroupBuilder.MapGet("/random/{limit:int}", GetRandomPosts)
+            routeGroupBuilder.MapGet("/{id:int}", GetPostById)
+                .WithName("GetPostById")
+                .Produces<ApiResponse<PostDetail>>();
+
+            routeGroupBuilder.MapGet("/random/{number:int}", GetRandomPosts)
                 .WithName("GetRandomPosts")
                 .Produces<ApiResponse<IList<PostDto>>>();
 
-            routeGroupBuilder.MapGet("/archive/{limit:int}", GetArchivePosts)
+            routeGroupBuilder.MapGet("/featured/{number:int}", GetFeaturedPosts)
+               .WithName("GetFeaturedPost")
+               .Produces<ApiResponse<PaginationResult<PostDto>>>();
+
+            routeGroupBuilder.MapGet("/archive/{number:int}", GetArchivePosts)
               .WithName("GetArchivePosts")
               .Produces<ApiResponse<IList<MonthPostCount>>>();
 
@@ -33,6 +41,19 @@ namespace TatBlog.WebApi.Endpoints
                .Produces<ApiResponse<string>>();
 
             return app;
+        }
+
+        private static async Task<IResult> GetPost(
+       [AsParameters] PostFilterModel model,
+       IBlogRepository blogRepository,
+       IMapper mapper)
+        {
+            var postsQuery = mapper.Map<PostQuery>(model);
+
+            var postList = await blogRepository.GetPagedPostsAsync(postsQuery,model, p => p.ProjectToType<PostDto>());
+
+            var paginationResult = new PaginationResult<PostDto>(postList);
+            return Results.Ok(ApiResponse.Success(paginationResult));
         }
 
         private static async Task<IResult> GetPostById(int id, IBlogRepository blogRepository, IMapper mapper)
@@ -56,6 +77,15 @@ namespace TatBlog.WebApi.Endpoints
                 ? Results.Ok(ApiResponse.Success(
                     mapper.Map<IList<PostDto>>(posts)))
                 : Results.Ok(ApiResponse.Fail(HttpStatusCode.NotFound, "Không tìm thấy bài viết"));
+        }
+
+        private static async Task<IResult> GetFeaturedPosts(int number, IBlogRepository blogRepository, IMapper mapper)
+        {
+            var posts = await blogRepository.GetPopularArticlesAsync(number);
+
+            return posts.Count != 0
+                ? Results.Ok(ApiResponse.Success(mapper.Map<IList<PostDto>>(posts)))
+                : Results.Ok(ApiResponse.Fail(HttpStatusCode.NotFound, "Không có bài viết"));
         }
 
         private static async Task<IResult> GetArchivePosts(int number, IBlogRepository blogRepository, IMapper mapper)
