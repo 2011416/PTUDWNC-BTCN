@@ -10,67 +10,67 @@ namespace TatBlog.Services.Blogs;
 
 public class AuthorRepository : IAuthorRepository
 {
-	private readonly BlogDbContext _context;
-	private readonly IMemoryCache _memoryCache;
+    private readonly BlogDbContext _context;
+    private readonly IMemoryCache _memoryCache;
 
-	public AuthorRepository(BlogDbContext context, IMemoryCache memoryCache)
-	{
-		_context = context;
-		_memoryCache = memoryCache;
-	}
+    public AuthorRepository(BlogDbContext context, IMemoryCache memoryCache)
+    {
+        _context = context;
+        _memoryCache = memoryCache;
+    }
 
-	public async Task<Author> GetAuthorBySlugAsync(
-		string slug, CancellationToken cancellationToken = default)
-	{
-		return await _context.Set<Author>()
-			.FirstOrDefaultAsync(a => a.UrlSlug == slug, cancellationToken);
-	}
+    public async Task<Author> GetAuthorBySlugAsync(
+        string slug, CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<Author>()
+            .FirstOrDefaultAsync(a => a.UrlSlug == slug, cancellationToken);
+    }
 
-	public async Task<Author> GetCachedAuthorBySlugAsync(
-		string slug, CancellationToken cancellationToken = default)
-	{
-		return await _memoryCache.GetOrCreateAsync(
-			$"author.by-slug.{slug}",
-			async (entry) =>
-			{
-				entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30);
-				return await GetAuthorBySlugAsync(slug, cancellationToken);
-			});
-	}
+    public async Task<Author> GetCachedAuthorBySlugAsync(
+        string slug, CancellationToken cancellationToken = default)
+    {
+        return await _memoryCache.GetOrCreateAsync(
+            $"author.by-slug.{slug}",
+            async (entry) =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30);
+                return await GetAuthorBySlugAsync(slug, cancellationToken);
+            });
+    }
 
-	public async Task<Author> GetAuthorByIdAsync(int authorId)
-	{
-		return await _context.Set<Author>().FindAsync(authorId);
-	}
+    public async Task<Author> GetAuthorByIdAsync(int authorId)
+    {
+        return await _context.Set<Author>().FindAsync(authorId);
+    }
 
-	public async Task<Author> GetCachedAuthorByIdAsync(int authorId)
-	{
-		return await _memoryCache.GetOrCreateAsync(
-			$"author.by-id.{authorId}",
-			async (entry) =>
-			{
-				entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30);
-				return await GetAuthorByIdAsync(authorId);
-			});
-	}
+    public async Task<Author> GetCachedAuthorByIdAsync(int authorId)
+    {
+        return await _memoryCache.GetOrCreateAsync(
+            $"author.by-id.{authorId}",
+            async (entry) =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30);
+                return await GetAuthorByIdAsync(authorId);
+            });
+    }
 
-	public async Task<IList<AuthorItem>> GetAuthorsAsync(
-		CancellationToken cancellationToken = default)
-	{
-		return await _context.Set<Author>()
-			.OrderBy(a => a.FullName)
-			.Select(a => new AuthorItem()
-			{
-				Id = a.Id,
-				FullName = a.FullName,
-				Email = a.Email,
-				JoinedDate = a.JoinedDate,
-				ImageUrl = a.ImageUrl,
-				UrlSlug = a.UrlSlug,
-				PostCount = a.Posts.Count(p => p.Published)
-			})
-			.ToListAsync(cancellationToken);
-	}
+    public async Task<IList<AuthorItem>> GetAuthorsAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<Author>()
+            .OrderBy(a => a.FullName)
+            .Select(a => new AuthorItem()
+            {
+                Id = a.Id,
+                FullName = a.FullName,
+                Email = a.Email,
+                JoinedDate = a.JoinedDate,
+                ImageUrl = a.ImageUrl,
+                UrlSlug = a.UrlSlug,
+                PostCount = a.Posts.Count(p => p.Published)
+            })
+            .ToListAsync(cancellationToken);
+    }
 
     public async Task<IList<Author>> GetAuthorsAsync(int numAuthors, CancellationToken cancellationToken = default)
     {
@@ -109,54 +109,54 @@ public class AuthorRepository : IAuthorRepository
 
 
     public async Task<IPagedList<T>> GetPagedAuthorsAsync<T>(
-		Func<IQueryable<Author>, IQueryable<T>> mapper,
-		IPagingParams pagingParams,
-		string name = null,
-		CancellationToken cancellationToken = default)
-	{
-		var authorQuery = _context.Set<Author>().AsNoTracking();
+        Func<IQueryable<Author>, IQueryable<T>> mapper,
+        IPagingParams pagingParams,
+        string name = null,
+        CancellationToken cancellationToken = default)
+    {
+        var authorQuery = _context.Set<Author>().AsNoTracking();
 
-		if (!string.IsNullOrEmpty(name))
-		{
-			authorQuery = authorQuery.Where(x => x.FullName.Contains(name));
-		}
+        if (!string.IsNullOrEmpty(name))
+        {
+            authorQuery = authorQuery.Where(x => x.FullName.Contains(name));
+        }
 
-		return await mapper(authorQuery)
-			.ToPagedListAsync(pagingParams, cancellationToken);
-	}
+        return await mapper(authorQuery)
+            .ToPagedListAsync(pagingParams, cancellationToken);
+    }
 
-	public async Task<bool> AddOrUpdateAsync(
-		Author author, CancellationToken cancellationToken = default)
-	{
-		if (author.Id > 0)
-		{
-			_context.Authors.Update(author);
-			_memoryCache.Remove($"author.by-id.{author.Id}");
-		}
-		else
-		{
-			_context.Authors.Add(author);
-		}
+    public async Task<bool> AddOrUpdateAsync(
+        Author author, CancellationToken cancellationToken = default)
+    {
+        if (author.Id > 0)
+        {
+            _context.Authors.Update(author);
+            _memoryCache.Remove($"author.by-id.{author.Id}");
+        }
+        else
+        {
+            _context.Authors.Add(author);
+        }
 
-		return await _context.SaveChangesAsync(cancellationToken) > 0;
-	}
-	
-	public async Task<bool> DeleteAuthorAsync(
-		int authorId, CancellationToken cancellationToken = default)
-	{
-		return await _context.Authors
-			.Where(x => x.Id == authorId)
-			.ExecuteDeleteAsync(cancellationToken) > 0;
-	}
+        return await _context.SaveChangesAsync(cancellationToken) > 0;
+    }
 
-	public async Task<bool> IsAuthorSlugExistedAsync(
-		int authorId, 
-		string slug, 
-		CancellationToken cancellationToken = default)
-	{
-		return await _context.Authors
-			.AnyAsync(x => x.Id != authorId && x.UrlSlug == slug, cancellationToken);
-	}
+    public async Task<bool> DeleteAuthorAsync(
+        int authorId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Authors
+            .Where(x => x.Id == authorId)
+            .ExecuteDeleteAsync(cancellationToken) > 0;
+    }
+
+    public async Task<bool> IsAuthorSlugExistedAsync(
+        int authorId,
+        string slug,
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.Authors
+            .AnyAsync(x => x.Id != authorId && x.UrlSlug == slug, cancellationToken);
+    }
 
 	public async Task<bool> SetImageUrlAsync(
 		int authorId, string imageUrl,
