@@ -223,9 +223,9 @@ namespace TatBlog.WebApi.Endpoints
                 : Results.Ok(ApiResponse.Fail(HttpStatusCode.NotFound, "Could not find author "));
         }
 
-        private static async Task<IResult> GetAuthorsMostArticles(int numberAuthor, IAuthorRepository authorRepository)
+        private static async Task<IResult> GetAuthorsMostArticles(int limit, IAuthorRepository authorRepository)
         {
-            var authors = await authorRepository.GetAuthorsAsync(numberAuthor);
+            var authors = await authorRepository.GetAuthorsAsync(limit);
 
             return Results.Ok(ApiResponse.Success(authors));
         }
