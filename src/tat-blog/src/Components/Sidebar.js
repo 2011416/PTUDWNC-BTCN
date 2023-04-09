@@ -3,6 +3,9 @@ import SearchForm from "./SearchForm";
 import CategoriesWidget from "./CategoriesWidget";
 import RandomPostsWidget from "./RandomPostsWidget";
 import FeaturedPostsWidget from "./FeaturedPostsWidget";
+import TagCloudWidget from "./TagCloudWidget";
+import BestAuthorsWidget from "./BestAuthorsWidget";
+import ArchivesWidget from "./ArchivesWidget";
 
 
 const Sidebar = () => {
@@ -15,12 +18,16 @@ const Sidebar = () => {
            <RandomPostsWidget />      
 
            <FeaturedPostsWidget />   
+
+           <TagCloudWidget /> 
+
+           <BestAuthorsWidget />
+
+           <ArchivesWidget /> 
             <h1>
                 Đăng ký nhận tin mới
             </h1>
-            <h1>
-                Tag cloud
-            </h1>
+
         </div>
     )
 }
