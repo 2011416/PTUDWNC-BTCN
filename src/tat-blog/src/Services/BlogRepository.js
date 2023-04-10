@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { get_api } from './Method';
 
 export async function getPosts (keyword = '',pageSize = 10, pageNumber = 1, sortColumm ='', sortOrder = '') {
     try {
@@ -15,3 +16,4 @@ export async function getPosts (keyword = '',pageSize = 10, pageNumber = 1, sort
         return null;
     }
 }
+

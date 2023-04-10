@@ -19,6 +19,7 @@ import {
   Routes,
   Route,
 } from 'react-router-dom';
+import BadRequest from './Pages/BadRequest';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
           <Route path='/admin/tags' element={<Tags />} />
         </Route>
 
+        <Route path='/400' element={<BadRequest />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
       <Footer />
