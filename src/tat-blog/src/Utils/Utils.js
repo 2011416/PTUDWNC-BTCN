@@ -21,3 +21,7 @@ export function getMonthName(monthNumber) {
 
     return month[monthNumber - 1];
 }
+
+export function isInterger(str) {
+    return Number.isInterger(Number(str)) && Number(str) >=0;
+}
