@@ -1,8 +1,9 @@
 import React, {useEffect, useState } from "react";
 import Table from 'react-bootstrap/Table';
-import { Link } from 'react-router-dom';
+import { Link, useParams, Navigate } from 'react-router-dom';
 import { getPosts } from '../../../Services/BlogRepository';
 import Loading from "../../../Components/Loading";
+import { isInteger } from "../../../Utils/Utils";
 // import PostFilterPane from "../../../Components/Admin/PostFilterPane";
 import { useSelector } from "react-redux";
 

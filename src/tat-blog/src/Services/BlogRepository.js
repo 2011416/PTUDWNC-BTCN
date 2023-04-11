@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { get_api } from './Method';
+import { get_api, post_api } from './Methods';
 
 export async function getPosts (keyword = '',pageSize = 10, pageNumber = 1, sortColumm ='', sortOrder = '') {
     try {
@@ -36,3 +36,16 @@ sortOrder = '') {
     url.searchParams.append('PageNumber', pageNumber);
     return get_api(url.href);
 } 
+
+export async function getPostById(id = 0) {
+    if (id > 0)
+     return get_api(`https://localhost:7245/api/posts/${id}`);
+    return null;
+}
+
+export function addOrUpdatePost(formData){
+    return post_api('https://localhost:7245/api/posts', formData);
+}
+
+
+
