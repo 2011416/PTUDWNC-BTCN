@@ -4,7 +4,7 @@ import { Link, useParams, Navigate } from 'react-router-dom';
 import { getPosts } from '../../../Services/BlogRepository';
 import Loading from "../../../Components/Loading";
 import { isInteger } from "../../../Utils/Utils";
-// import PostFilterPane from "../../../Components/Admin/PostFilterPane";
+import PostFilterPane from "../../../Components/Admin/PostFilterPane";
 import { useSelector } from "react-redux";
 
 const Posts = () => {
@@ -29,7 +29,7 @@ const Posts = () => {
     return (
         <>
             <h1>Danh sách bài viết </h1>
-            {/* <PostFilterPane /> */}
+            <PostFilterPane />
             {isVisibleLoading ? <Loading /> :
                 <Table striped responsive bordered>
                     <thead>
