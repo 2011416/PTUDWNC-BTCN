@@ -13,7 +13,7 @@ const postFilterReducer = createSlice({
     initialState,
     reducers: {
         reset: (state, action) => {
-            return initialState;
+        return initialState; 
         },
         updateKeyword: (state, action) => {
             return {

@@ -32,6 +32,10 @@ const PostFilterPane = () => {
         monthList: [],
     });
 
+    const handleReset = (e) => {
+        dispatchEvent(reset());
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
     };
