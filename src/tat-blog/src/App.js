@@ -11,7 +11,7 @@ import Authors from './Pages/Admin/Authors';
 import Categories from './Pages/Admin/Category/Categories';
 import Comments from './Pages/Admin/Comments';
 import Posts from './Pages/Admin/Post/Posts';
-import Tags from './Pages/Admin/Tags';
+import Tags from './Pages/Admin/Tag/Tags';
 import NotFound from './Pages/NotFound';
 import Edit from './Pages/Admin/Post/Edit';
 
