@@ -1,59 +1,59 @@
 import React, {useEffect, useState } from "react";
 import Table from 'react-bootstrap/Table';
 import { Link, useParams, Navigate } from 'react-router-dom';
-import { getTags } from "../../../Services/Widgets";
+import { getAuthors } from "../../../Services/Widgets";
 import Loading from "../../../Components/Loading";
 import { isInteger } from "../../../Utils/Utils";
 import PostFilterPane from "../../../Components/Admin/PostFilterPane";
 
-const Tags = () => {
-    const [tagsList, setTagsList] = useState([]);
+const Authors = () => {
+    const [authorsList, setAuthorsList] = useState([]);
     const [isVisibleLoading, setIsVisibleLoading] = useState(true);
 
     useEffect(() => {
-        document.title = 'Danh sách thẻ';
+        document.title = 'Danh sách tác giả';
 
-        get().then((data) => {
+        getAuthors().then((data) => {
             if (data) 
-                setTagsList(data.items);
+                setAuthorsList(data.items);
             else 
-                setTagsList([]);
+                setAuthorsList([]);
             setIsVisibleLoading(false);
         });
     }, []);
 
     return (
         <>
-            <h1>Danh sách thẻ </h1>
+            <h1>Danh sách tác giả </h1>
             <PostFilterPane />
             {isVisibleLoading ? <Loading /> :
                 <Table striped responsive bordered>
                     <thead>
                         <tr>
-                            <th>Tiêu đề</th>
+                            <th>Tên</th>
                             <th>Slug</th>
-                            <th>Mô tả</th>
-                            <th>Hiển thị</th>
+                            <th>Email</th>
+                            <th>Bài viết</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {tagsList.length > 0 ? tagsList.map((item, index) => 
+                        {authorsList.length > 0 ? authorsList.map((item, index) => 
                                 <tr key={index}>
                                     <td>
-                                        <Link to={`/admin/tags/edit/${item.id}`} 
+                                        <Link to={`/admin/authors/edit/${item.id}`} 
                                         className='text-bold'>
-                                            {item.name}
+                                            {item.fullName}
                                         </Link>
                                         <p className="text-muted">{item.shortDescription}</p>
                                     </td>
-                                    <td>{item.name}</td>
                                     <td>{item.urlSlug}</td>
-                                    <td>{item.description}</td>
+                                    <td>{item.email}</td>
+                                    <td>{item.postCount}</td>
                                 </tr>
                             ) : 
                             <tr>
                                 <td colSpan={4}>
-                                    <h4 className="text-danger text-center">Không tìm thấy thẻ nào</h4>
+                                    <h4 className="text-danger text-center">Không tìm thấy tác giả nào</h4>
                                 </td>
                             </tr>}
                     </tbody>
@@ -63,4 +63,4 @@ const Tags = () => {
     );
 }
 
-export default Tags;
+export default Authors;

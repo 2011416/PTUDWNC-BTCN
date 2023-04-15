@@ -7,7 +7,7 @@ import Contact from './Pages/Contact';
 import RSS from './Pages/Rss';
 import AdminLayout from './Pages/Admin/Layout';
 import * as AdminIndex from './Pages/Admin/Index';
-import Authors from './Pages/Admin/Authors';
+import Authors from './Pages/Admin/Author/Authors';
 import Categories from './Pages/Admin/Category/Categories';
 import Comments from './Pages/Admin/Comments';
 import Posts from './Pages/Admin/Post/Posts';
