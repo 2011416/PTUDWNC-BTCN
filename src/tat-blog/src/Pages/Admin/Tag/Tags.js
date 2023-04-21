@@ -13,7 +13,7 @@ const Tags = () => {
     useEffect(() => {
         document.title = 'Danh sách thẻ';
 
-        get().then((data) => {
+        getTags().then((data) => {
             if (data) 
                 setTagsList(data.items);
             else 
