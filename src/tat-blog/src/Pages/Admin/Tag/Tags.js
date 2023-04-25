@@ -4,7 +4,7 @@ import { Link, useParams, Navigate } from 'react-router-dom';
 import { getTags } from "../../../Services/Widgets";
 import Loading from "../../../Components/Loading";
 import { isInteger } from "../../../Utils/Utils";
-import PostFilterPane from "../../../Components/Admin/PostFilterPane";
+import TagFilterPane from "../../../Components/Admin/TagFilterPane";
 
 const Tags = () => {
     const [tagsList, setTagsList] = useState([]);
@@ -25,7 +25,7 @@ const Tags = () => {
     return (
         <>
             <h1>Danh sách thẻ </h1>
-            <PostFilterPane />
+            <TagFilterPane />
             {isVisibleLoading ? <Loading /> :
                 <Table striped responsive bordered>
                     <thead>

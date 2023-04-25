@@ -4,7 +4,7 @@ import { Link, useParams, Navigate } from 'react-router-dom';
 import { getAuthors } from "../../../Services/Widgets";
 import Loading from "../../../Components/Loading";
 import { isInteger } from "../../../Utils/Utils";
-import PostFilterPane from "../../../Components/Admin/PostFilterPane";
+import AuthorFilterPane from "../../../Components/Admin/AuthorFilterPane";
 
 const Authors = () => {
     const [authorsList, setAuthorsList] = useState([]);
@@ -25,7 +25,7 @@ const Authors = () => {
     return (
         <>
             <h1>Danh sách tác giả </h1>
-            <PostFilterPane />
+            <AuthorFilterPane />
             {isVisibleLoading ? <Loading /> :
                 <Table striped responsive bordered>
                     <thead>

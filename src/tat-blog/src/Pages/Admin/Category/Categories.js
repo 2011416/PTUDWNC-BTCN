@@ -4,7 +4,7 @@ import { Link, useParams, Navigate } from 'react-router-dom';
 import { getCategories } from "../../../Services/Widgets";
 import Loading from "../../../Components/Loading";
 import { isInteger } from "../../../Utils/Utils";
-import PostFilterPane from "../../../Components/Admin/PostFilterPane";
+import CategoryFilterPane from "../../../Components/Admin/CategoryFilterPane";
 
 const Categories = () => {
     const [categoriesList, setCategoriesList] = useState([]);
@@ -25,7 +25,7 @@ const Categories = () => {
     return (
         <>
             <h1>Danh sách chủ đề </h1>
-            <PostFilterPane />
+            <CategoryFilterPane />
             {isVisibleLoading ? <Loading /> :
                 <Table striped responsive bordered>
                     <thead>
